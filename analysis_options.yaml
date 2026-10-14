@@ -1,0 +1,20 @@
+# Análisis estático: `make analyze`. Reglas de Flutter más tipos estrictos, que obligan a
+# hacer explícitos los casts al leer el JSON de la API.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    unawaited_futures: true
+    avoid_print: true

@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "id": 3,
+      "date": "2026-10-20",
+      "time": "10:30",
+      "text": "Dentista",
+      "created_at": "2026-10-08T07:00:00Z",
+      "updated_at": "2026-10-08T07:00:00Z"
+    },
+    {
+      "id": 4,
+      "date": "2026-10-21",
+      "time": null,
+      "text": "Renovar el DNI",
+      "created_at": "2026-10-08T07:05:00Z",
+      "updated_at": "2026-10-09T08:00:00Z"
+    }
+  ],
+  "page": 1,
+  "per_page": 20,
+  "total": 2
+}

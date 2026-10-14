@@ -1,0 +1,18 @@
+{
+  "id": 42,
+  "status": "TRANSCRIBED",
+  "source": "app",
+  "duration_seconds": 37,
+  "received_at": "2026-10-08T07:09:33Z",
+  "error_code": null,
+  "error_message": null,
+  "transcription": {
+    "id": 40,
+    "content": "Hoy he ido al dentista y luego he trabajado en el proyecto.",
+    "edited_manually": false,
+    "model": "whisper-large-v3",
+    "processing_ms": 14200,
+    "created_at": "2026-10-08T07:09:50Z",
+    "updated_at": "2026-10-08T07:09:50Z"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "status": "FAILED",
+  "requested_at": "2026-10-08T18:00:00Z",
+  "started_at": null,
+  "finished_at": null,
+  "error_code": "STALLED",
+  "error_message": "La generación no terminó a tiempo. Puedes volver a pedirla."
+}

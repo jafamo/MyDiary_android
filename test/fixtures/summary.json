@@ -1,0 +1,18 @@
+{
+  "id": 7,
+  "date": "2026-10-05",
+  "summary_text": "💼 Día de trabajo en el proyecto.\n\n✅ Pendiente: llamar al dentista.",
+  "generated_at": "2026-10-05T19:00:12Z",
+  "emoji_legend": [
+    {"emoji": "💼", "meaning": "Trabajo"},
+    {"emoji": "✅", "meaning": "Pendientes"}
+  ],
+  "topics": [
+    {"id": 2, "name": "trabajo"},
+    {"id": 5, "name": "salud"}
+  ],
+  "model": "qwen2.5:7b",
+  "prompt_tokens": 2980,
+  "completion_tokens": 432,
+  "generation_ms": 38000
+}

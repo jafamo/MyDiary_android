@@ -1,0 +1,28 @@
+#!/bin/sh
+# Bloquea el commit si los ficheros Dart en staging no están formateados con `dart format`.
+# Activar con: git config core.hooksPath .githooks
+
+staged_dart_files=$(git diff --cached --name-only --diff-filter=ACM -- '*.dart')
+
+if [ -z "$staged_dart_files" ]; then
+    exit 0
+fi
+
+if [ "$(docker inspect -f '{{.State.Running}}' mydiary-flutter 2>/dev/null)" != "true" ]; then
+    echo "Aviso: el contenedor mydiary-flutter no está levantado; no se comprueba el formato (lo hará la CI)."
+    exit 0
+fi
+
+echo "Comprobando el formato de los ficheros Dart en staging..."
+
+docker exec mydiary-flutter dart format --output=none --set-exit-if-changed $staged_dart_files
+status=$?
+
+if [ $status -ne 0 ]; then
+    echo ""
+    echo "Commit bloqueado: hay ficheros sin formatear."
+    echo "Ejecuta 'make format' y vuelve a intentar el commit."
+    exit 1
+fi
+
+exit 0

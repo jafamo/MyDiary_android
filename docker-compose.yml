@@ -1,0 +1,23 @@
+services:
+  flutter:
+    build:
+      context: docker/flutter
+      args:
+        UID: ${HOST_UID:-1000}
+        GID: ${HOST_GID:-1000}
+    image: mydiary-flutter:3.47.7
+    container_name: mydiary-flutter
+    # Red del host: llega al backend local (localhost:9008) y a los móviles con depuración inalámbrica.
+    network_mode: host
+    working_dir: /app
+    # Vivo entre comandos: el servidor de adb (y el emparejamiento con el móvil) está dentro.
+    command: sleep infinity
+    init: true
+    volumes:
+      - .:/app
+      - pub-cache:/home/builder/.pub-cache
+      - gradle-cache:/home/builder/.gradle
+
+volumes:
+  pub-cache:
+  gradle-cache:
