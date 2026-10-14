@@ -1,78 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../auth/session_notifier.dart';
+/// Contenedor de las secciones principales con la barra de navegación inferior.
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key, required this.navigationShell});
 
-/// Provisional: la portada (Diario) llega en la fase 2.
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+  final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MyDiary'),
-        actions: const [_AccountMenu()],
-      ),
-      body: const Center(child: Text('Diario')),
-    );
-  }
-}
-
-class _AccountMenu extends ConsumerWidget {
-  const _AccountMenu();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(sessionProvider).value;
-
-    return PopupMenuButton<void>(
-      tooltip: 'Cuenta',
-      itemBuilder: (context) => [
-        PopupMenuItem<void>(
-          enabled: false,
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.person),
-            title: Text(session?.username ?? ''),
-            subtitle: Text(session?.deviceName ?? ''),
-          ),
+      body: navigationShell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
         ),
-        const PopupMenuDivider(),
-        PopupMenuItem<void>(
-          onTap: () => _confirmLogout(context, ref),
-          child: const ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: Icon(Icons.logout),
-            title: Text('Cerrar sesión'),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.today_outlined),
+            selectedIcon: Icon(Icons.today),
+            label: 'Diario',
           ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('¿Cerrar sesión?'),
-        content: const Text(
-          'Tendrás que volver a introducir el usuario y la contraseña.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancelar'),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_month_outlined),
+            selectedIcon: Icon(Icons.calendar_month),
+            label: 'Historial',
           ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Cerrar sesión'),
-          ),
+          NavigationDestination(icon: Icon(Icons.search), label: 'Buscar'),
+          NavigationDestination(icon: Icon(Icons.menu), label: 'Más'),
         ],
       ),
     );
-    if (confirmed ?? false) {
-      await ref.read(sessionProvider.notifier).logout();
-    }
   }
 }

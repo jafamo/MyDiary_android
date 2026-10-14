@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'router.dart';
@@ -11,6 +12,9 @@ class MyDiaryApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'MyDiary',
       theme: ThemeData(colorSchemeSeed: Colors.indigo),
+      locale: const Locale('es'),
+      supportedLocales: const [Locale('es')],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
       routerConfig: ref.watch(routerProvider),
     );
   }

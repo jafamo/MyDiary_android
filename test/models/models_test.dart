@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mydiary/api/json.dart';
 import 'package:mydiary/models/audio.dart';
+import 'package:mydiary/models/diary.dart';
 import 'package:mydiary/models/paginated.dart';
 import 'package:mydiary/models/reminder.dart';
 import 'package:mydiary/models/summary.dart';
@@ -123,5 +125,81 @@ void main() {
     expect(page.items.first.time, '10:30');
     expect(page.items.last.time, isNull);
     expect(page.items.last.updatedAt, DateTime.utc(2026, 10, 9, 8));
+  });
+
+  group('Diary', () {
+    test('portada completa', () {
+      final diary = Diary.fromJson(fixture('diary'));
+
+      expect(diary.date, DateTime(2026, 10, 14));
+      expect(diary.entries.map((e) => e.status), [
+        AudioStatus.transcribed,
+        AudioStatus.pending,
+        AudioStatus.error,
+      ]);
+      expect(diary.summary!.topics.map((t) => t.name), ['trabajo', 'salud']);
+      expect(diary.summaryGeneration, isNull);
+      expect(diary.streak.current, 4);
+      expect(diary.streak.best, 12);
+      expect(diary.week.total, 9);
+      expect(diary.week.delta, 2);
+      expect(diary.topTopic!.name, 'trabajo');
+      expect(diary.topTopic!.count, 6);
+    });
+
+    test('sin resumen ni tema del mes', () {
+      final diary = Diary.fromJson({
+        ...fixture('diary'),
+        'entries': <Object?>[],
+        'summary': null,
+        'top_topic': null,
+      });
+
+      expect(diary.entries, isEmpty);
+      expect(diary.summary, isNull);
+      expect(diary.topTopic, isNull);
+    });
+
+    group('needsPolling', () {
+      Json withEntries(List<String> statuses, {String? generation}) => {
+        ...fixture('diary'),
+        'entries': [
+          for (final (i, status) in statuses.indexed)
+            {
+              ...fixture('audio_transcribed'),
+              'id': i,
+              'status': status,
+              'transcription': null,
+            },
+        ],
+        'summary_generation': generation == null
+            ? null
+            : {...fixture('summary_generation_stalled'), 'status': generation},
+      };
+
+      test('con un audio pendiente', () {
+        expect(
+          Diary.fromJson(withEntries(['TRANSCRIBED', 'PENDING'])).needsPolling,
+          isTrue,
+        );
+      });
+
+      test('con el resumen en curso', () {
+        expect(
+          Diary.fromJson(withEntries(['TRANSCRIBED'], generation: 'QUEUED'))
+              .needsPolling,
+          isTrue,
+        );
+      });
+
+      test('sin nada en curso', () {
+        expect(
+          Diary.fromJson(
+            withEntries(['TRANSCRIBED', 'ERROR'], generation: 'FAILED'),
+          ).needsPolling,
+          isFalse,
+        );
+      });
+    });
   });
 }

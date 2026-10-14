@@ -27,7 +27,9 @@ Se deciden al proponer la fase correspondiente (regla «Opciones de diseño ante
 
 Login (`username`, `password`, `device_name` del dispositivo), token en `flutter_secure_storage`, `GET /me` al arrancar, logout. `429` con `Retry-After`.
 
-### Fase 2 — Diario (lectura)
+### Fase 2 — Diario (lectura) ✅
+
+> Hecha en el change `diary` (rama `feature/diary`). Portada con el resumen arriba (plegable), cifras compactas, filtro por estado y entradas con «Ver más». Recarga sola cada 10 s mientras hay algo en curso (en primer plano y con la pestaña visible), al deslizar y al volver a la app. Barra inferior con Diario, Historial, Buscar y Más (las tres últimas, provisionales hasta la fase 5). App en español (`flutter_localizations`, `intl`).
 
 Portada con las entradas de hoy, estado de cada audio, transcripción, resumen, rachas, semana y tema del mes. Filtro por estado. Pull-to-refresh.
 

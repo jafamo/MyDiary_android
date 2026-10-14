@@ -3,14 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'auth/session_notifier.dart';
+import 'diary/diary_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/more_screen.dart';
+import 'screens/upcoming_screen.dart';
 import 'screens/splash_screen.dart';
 
 abstract final class Routes {
   static const splash = '/splash';
   static const home = '/';
   static const login = '/login';
+  static const history = '/historial';
+  static const search = '/buscar';
+  static const more = '/mas';
 }
 
 /// Mientras se comprueba la sesión, `/splash`; sin sesión, `/login`; con sesión, el resto.
@@ -40,9 +46,44 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.splash,
         builder: (context, state) => const SplashScreen(),
       ),
-      GoRoute(
-        path: Routes.home,
-        builder: (context, state) => const HomeScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, shell) => HomeScreen(navigationShell: shell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.home,
+                builder: (context, state) => const DiaryScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.history,
+                builder: (context, state) =>
+                    const UpcomingScreen(title: 'Historial'),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.search,
+                builder: (context, state) =>
+                    const UpcomingScreen(title: 'Buscar'),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.more,
+                builder: (context, state) => const MoreScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: Routes.login,

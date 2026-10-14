@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,8 +51,12 @@ void main() {
     tester,
   ) async {
     storage.session = storedSession;
-    final me = Completer<ResponseBody>();
-    backend.handler = (_) => me.future;
+    final gate = Completer<void>();
+    final respond = backend.handler;
+    backend.handler = (options) async {
+      await gate.future;
+      return respond(options);
+    };
     container = createTestContainer(backend: backend, storage: storage);
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -65,7 +68,7 @@ void main() {
 
     expect(find.byType(SplashScreen), findsOneWidget);
 
-    me.complete(emptyResponse(204));
+    gate.complete();
     await tester.pumpAndSettle();
   });
 
