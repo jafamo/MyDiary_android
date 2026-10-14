@@ -21,7 +21,9 @@ Se deciden al proponer la fase correspondiente (regla «Opciones de diseño ante
 
 `flutter create` (Android + iOS), análisis estático y formato, CI, configuración por `--dart-define`, `ApiClient` (Bearer, errores `{code, message}`, `401` → login), modelos de la API con tests de parseo. D1–D3.
 
-### Fase 1 — Login
+### Fase 1 — Login ✅
+
+> Hecha en el change `login` (rama `feature/login`). Pantalla de carga mientras se valida la sesión con `/me` (sin red se entra con la guardada), `device_name` automático (fabricante, modelo y versión del sistema), menú ⋮ con la cuenta y «Cerrar sesión». Probado en el emulador contra el backend local, incluida la revocación del token por consola.
 
 Login (`username`, `password`, `device_name` del dispositivo), token en `flutter_secure_storage`, `GET /me` al arrancar, logout. `429` con `Retry-After`.
 

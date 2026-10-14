@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,40 +8,7 @@ import 'package:mydiary/api/json.dart';
 import 'package:mydiary/models/audio.dart';
 
 import '../fixtures.dart';
-
-/// Adaptador HTTP falso: registra las peticiones y responde con [handler].
-class FakeAdapter implements HttpClientAdapter {
-  FakeAdapter(this.handler);
-
-  final ResponseBody Function(RequestOptions options) handler;
-  final requests = <RequestOptions>[];
-
-  @override
-  Future<ResponseBody> fetch(
-    RequestOptions options,
-    Stream<Uint8List>? requestStream,
-    Future<void>? cancelFuture,
-  ) async {
-    requests.add(options);
-    return handler(options);
-  }
-
-  @override
-  void close({bool force = false}) {}
-}
-
-ResponseBody jsonResponse(
-  int status,
-  Object? body, {
-  Map<String, List<String>> headers = const {},
-}) => ResponseBody.fromString(
-  jsonEncode(body),
-  status,
-  headers: {
-    Headers.contentTypeHeader: [Headers.jsonContentType],
-    ...headers,
-  },
-);
+import '../support/fake_http.dart';
 
 void main() {
   late FakeAdapter adapter;

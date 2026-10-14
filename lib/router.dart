@@ -2,33 +2,44 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'auth/auth_token.dart';
+import 'auth/session_notifier.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/splash_screen.dart';
 
 abstract final class Routes {
+  static const splash = '/splash';
   static const home = '/';
   static const login = '/login';
 }
 
-/// Sin token, todo lleva a `/login`; con token, `/login` lleva al inicio. Al borrarse el
-/// token (logout o `401`), el router se reevalúa y vuelve al login solo.
+/// Mientras se comprueba la sesión, `/splash`; sin sesión, `/login`; con sesión, el resto.
+/// Al cerrarse o caducar la sesión, el router se reevalúa y vuelve al login solo.
 final routerProvider = Provider<GoRouter>((ref) {
-  final tokenChanges = ValueNotifier<String?>(ref.read(authTokenProvider));
-  ref.listen(authTokenProvider, (_, token) => tokenChanges.value = token);
+  final sessionChanges = ValueNotifier<int>(0);
+  ref.listen(sessionProvider, (_, _) => sessionChanges.value++);
 
   final router = GoRouter(
-    initialLocation: Routes.home,
-    refreshListenable: tokenChanges,
+    initialLocation: Routes.splash,
+    refreshListenable: sessionChanges,
     redirect: (context, state) {
-      final loggedIn = ref.read(authTokenProvider) != null;
-      final atLogin = state.matchedLocation == Routes.login;
-      if (!loggedIn) {
-        return atLogin ? null : Routes.login;
+      final session = ref.read(sessionProvider);
+      final location = state.matchedLocation;
+      if (session.isLoading && !session.hasValue) {
+        return location == Routes.splash ? null : Routes.splash;
       }
-      return atLogin ? Routes.home : null;
+      if (session.value == null) {
+        return location == Routes.login ? null : Routes.login;
+      }
+      return location == Routes.login || location == Routes.splash
+          ? Routes.home
+          : null;
     },
     routes: [
+      GoRoute(
+        path: Routes.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: Routes.home,
         builder: (context, state) => const HomeScreen(),
@@ -42,7 +53,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   ref.onDispose(() {
     router.dispose();
-    tokenChanges.dispose();
+    sessionChanges.dispose();
   });
 
   return router;

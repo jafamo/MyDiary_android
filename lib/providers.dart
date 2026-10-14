@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'api/api_client.dart';
@@ -10,10 +11,14 @@ final appConfigProvider = Provider<AppConfig>(
       throw UnimplementedError('appConfigProvider se sobrescribe en main()'),
 );
 
+/// Los tests lo sustituyen por uno con un adaptador HTTP falso.
+final dioProvider = Provider<Dio>((ref) => Dio());
+
 final apiClientProvider = Provider<ApiClient>(
   (ref) => ApiClient(
     baseUrl: ref.watch(appConfigProvider).apiBaseUrl,
     token: () => ref.read(authTokenProvider),
     onUnauthorized: () => ref.read(authTokenProvider.notifier).clear(),
+    dio: ref.watch(dioProvider),
   ),
 );

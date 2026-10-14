@@ -49,4 +49,9 @@ RUN cd /tmp \
     && flutter build apk --debug \
     && cd / && rm -rf /tmp/warmup
 
+# Plataformas que piden los plugins del proyecto además de la del calentamiento
+# (flutter_secure_storage, device_info_plus). Sin esto Gradle las descarga al compilar
+# y se pierden al recrear el contenedor.
+RUN sdkmanager "platforms;android-35"
+
 WORKDIR /app
