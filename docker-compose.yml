@@ -18,6 +18,29 @@ services:
       - pub-cache:/home/builder/.pub-cache
       - gradle-cache:/home/builder/.gradle
 
+  # Opcional, solo para desarrollar sin móvil Android: make emulator-up (no lo arranca make up).
+  emulator:
+    profiles: [emulator]
+    build:
+      context: docker/emulator
+    image: mydiary-emulator:3.47.7
+    container_name: mydiary-emulator
+    # Red del host: el adb de mydiary-flutter lo detecta solo (emulator-5554) y
+    # dentro del emulador 10.0.2.2 es el backend local.
+    network_mode: host
+    devices:
+      - /dev/kvm
+    environment:
+      DISPLAY: ${DISPLAY:-:0}
+      QT_X11_NO_MITSHM: "1"
+    volumes:
+      # Ventana en el escritorio del host (X11/XWayland), con la cookie de la sesión actual.
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - ${XAUTHORITY:-/dev/null}:/home/builder/.Xauthority:ro
+      # Estado del emulador (app instalada, datos) entre arranques; make emulator-reset lo borra.
+      - emulator-avd:/home/builder/.android/avd
+
 volumes:
   pub-cache:
   gradle-cache:
+  emulator-avd:

@@ -51,4 +51,8 @@ Depende de la fase 8 del backend (registro de dispositivos y notificador). D5.
 
 ### Fase 8 — iOS
 
-Build y firma para iPhone, permisos (`NSMicrophoneUsageDescription`), ATS, D4. Requiere cuenta de Apple Developer.
+Build y firma para iPhone, permisos (`NSMicrophoneUsageDescription`), ATS, D4. Compilar para iOS requiere Xcode, es decir, macOS: no se puede desde esta máquina Linux.
+
+- **D7 — Dónde compilar iOS:** un Mac propio (con Apple ID gratuito, instalar por cable con `flutter run`; la app caduca a los 7 días) o compilar en la nube (Codemagic o GitHub Actions con macOS) y distribuir por TestFlight. TestFlight y push (fase 7) requieren la cuenta de Apple Developer de pago.
+
+Mientras tanto, el desarrollo se prueba en el emulador de Android en Docker (`make emulator-up`).

@@ -1,4 +1,5 @@
-.PHONY: build up down sh doctor get format format-check analyze test apk run devices adb-pair adb-connect
+.PHONY: build up down sh doctor get format format-check analyze test apk run devices adb-pair adb-connect \
+	emulator-build emulator-up emulator-down emulator-logs emulator-reset
 
 COMPOSE = docker compose
 CONTAINER = mydiary-flutter
@@ -19,7 +20,7 @@ up:
 	HOST_UID=$$(id -u) HOST_GID=$$(id -g) $(COMPOSE) up -d
 
 down:
-	$(COMPOSE) down
+	$(COMPOSE) --profile emulator down
 
 sh:
 	$(RUNNING)
@@ -77,3 +78,26 @@ adb-connect:
 	$(RUNNING)
 	@[ -n "$(ADDR)" ] || { echo "Uso: make adb-connect ADDR=<ip>:<puerto>"; exit 1; }
 	$(EXEC) adb connect $(ADDR)
+
+# --- Emulador de Android (opcional, solo desarrollo; ver AGENTS.md) ---
+
+emulator-build:
+	$(COMPOSE) --profile emulator build emulator
+
+# Abre la ventana del emulador en el escritorio. Después, make run lo usa sin configurar nada.
+emulator-up:
+	@[ -e /dev/kvm ] || { echo "Error: no hay /dev/kvm (virtualización desactivada)."; exit 1; }
+	@[ -n "$(DISPLAY)" ] || { echo "Error: DISPLAY vacía; ejecuta desde una sesión gráfica."; exit 1; }
+	DISPLAY=$(DISPLAY) XAUTHORITY=$(XAUTHORITY) $(COMPOSE) --profile emulator up -d emulator
+	@echo "Arrancando Android (1-3 min la primera vez). Compruébalo con 'make devices'."
+
+emulator-down:
+	$(COMPOSE) --profile emulator stop emulator
+
+emulator-logs:
+	$(COMPOSE) --profile emulator logs -f emulator
+
+# Borra el estado del emulador (app instalada, datos): el siguiente arranque parte de cero.
+emulator-reset:
+	$(COMPOSE) --profile emulator rm -sf emulator
+	docker volume rm -f $$(basename $$(pwd) | tr 'A-Z' 'a-z')_emulator-avd

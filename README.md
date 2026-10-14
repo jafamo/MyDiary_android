@@ -18,6 +18,17 @@ make get && make test              # dependencias y tests
 make apk                           # build/app/outputs/flutter-apk/app-debug.apk
 ```
 
+En el emulador de Android en Docker (opcional, solo desarrollo; la ventana se abre en el escritorio):
+
+```bash
+make emulator-build   # una vez (unos 6 GB más)
+make emulator-up      # 60-90 s hasta que 'make devices' lista emulator-5554
+make run              # con API_BASE_URL=http://10.0.2.2:9008 llega al backend local
+make emulator-down
+```
+
+iPhone: compilar para iOS requiere macOS (ver fase 8 de `ROADMAP.md`).
+
 En un móvil Android 11+ por depuración inalámbrica: `make adb-pair ADDR=<ip>:<puerto>`, `make adb-connect ADDR=<ip>:<puerto>` y `make run`.
 
 Calidad: `make format-check`, `make analyze`, `make test` (los mismos pasos que la CI).
