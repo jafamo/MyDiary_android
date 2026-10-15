@@ -13,6 +13,10 @@ String formatDay(DateTime day) =>
 String formatTime(DateTime instant) =>
     DateFormat('HH:mm', _locale).format(instant.toLocal());
 
+/// Día y mes locales (`15/10`) de un instante UTC.
+String formatShortDate(DateTime instant) =>
+    DateFormat('dd/MM', _locale).format(instant.toLocal());
+
 /// Duración en `m:ss`.
 String formatDuration(int seconds) =>
     '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';

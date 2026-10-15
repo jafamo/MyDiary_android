@@ -39,7 +39,9 @@ Portada con las entradas de hoy, estado de cada audio, transcripción, resumen, 
 
 Grabación AAC `.m4a` (`record`), permisos de micrófono, subida multipart, resultado `created` / `duplicate` / `retrying`. D6.
 
-### Fase 4 — Escuchar
+### Fase 4 — Escuchar ✅
+
+> Hecha en el change `playback` (rama `feature/playback`). Botón ▶ en cada entrada del Diario; la nota se descarga entera con el token (sin pasar el token al reproductor ni proxy local) y el fichero se borra al terminar. Reproductor dentro de la tarjeta con salto y velocidad (1×, 1,5×, 2×), un audio cada vez. Sigue sonando en segundo plano con controles en la notificación y la pantalla de bloqueo (`audio_service` + `just_audio`). Grabar pausa la escucha.
 
 Reproductor con salto (`just_audio` + Bearer + `Range`).
 

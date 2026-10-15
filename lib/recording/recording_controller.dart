@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../api/api_exception.dart';
 import '../api/json.dart';
 import '../models/audio_upload.dart';
+import '../playback/playback_controller.dart';
 import '../providers.dart';
 import 'recorder.dart';
 
@@ -86,11 +86,6 @@ class RecordingState {
   );
 }
 
-/// Carpeta de las grabaciones. Los tests la sustituyen por una temporal.
-final recordingDirectoryProvider = FutureProvider<Directory>(
-  (ref) => getTemporaryDirectory(),
-);
-
 final recordingControllerProvider =
     NotifierProvider.autoDispose<RecordingController, RecordingState>(
       RecordingController.new,
@@ -122,11 +117,13 @@ class RecordingController extends Notifier<RecordingState> {
   }
 
   Future<void> start() async {
+    // No se graba encima de una nota que está sonando.
+    await ref.read(playbackControllerProvider.notifier).pause();
     if (!await _recorder.hasPermission()) {
       state = state.copyWith(phase: RecordingPhase.noPermission);
       return;
     }
-    final directory = await ref.read(recordingDirectoryProvider.future);
+    final directory = await ref.read(temporaryDirectoryProvider.future);
     _deleteLeftovers(directory);
     final path =
         '${directory.path}/nota-${DateTime.now().millisecondsSinceEpoch}.m4a';

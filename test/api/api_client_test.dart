@@ -91,6 +91,65 @@ void main() {
     expect(request.onSendProgress, isNotNull);
   });
 
+  group('descarga', () {
+    late Directory directory;
+
+    setUp(() {
+      directory = Directory.systemTemp.createTempSync('mydiary-test-');
+      addTearDown(() => directory.deleteSync(recursive: true));
+    });
+
+    test('guarda el fichero con el token y devuelve el Content-Type', () async {
+      token = 'abc';
+      respond(
+        (_) => ResponseBody.fromBytes(
+          [1, 2, 3],
+          200,
+          headers: {
+            Headers.contentTypeHeader: ['audio/mp4'],
+          },
+        ),
+      );
+      final path = '${directory.path}/nota.m4a';
+
+      final contentType = await client.download('/audios/7/fichero', path);
+
+      expect(contentType, 'audio/mp4');
+      expect(File(path).readAsBytesSync(), [1, 2, 3]);
+      final request = adapter.requests.single;
+      expect(request.uri.path, '/api/v1/audios/7/fichero');
+      expect(request.headers['Authorization'], 'Bearer abc');
+    });
+
+    test('error de la API con code y message', () async {
+      token = 'abc';
+      respond((_) => apiError(404, 'not_found', 'El audio no existe.'));
+      final path = '${directory.path}/nota.m4a';
+
+      final e = await failure(client.download('/audios/7/fichero', path));
+
+      expect(e.code, 'not_found');
+      expect(e.message, 'El audio no existe.');
+      expect(File(path).existsSync(), isFalse);
+    });
+
+    test('cancelada es cancelled', () async {
+      token = 'abc';
+      respond((_) => ResponseBody.fromBytes([1], 200));
+      final cancelToken = CancelToken()..cancel();
+
+      final e = await failure(
+        client.download(
+          '/audios/7/fichero',
+          '${directory.path}/nota.m4a',
+          cancelToken: cancelToken,
+        ),
+      );
+
+      expect(e.code, ApiException.cancelled);
+    });
+  });
+
   test('pasa los parámetros de consulta', () async {
     token = 'abc';
     respond((_) => jsonResponse(200, <String, Object?>{}));

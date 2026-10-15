@@ -11,6 +11,7 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - `feature/login` — fase 1 del roadmap.
 - `feature/diary` — fase 2 del roadmap.
 - `feature/recording` — fase 3 del roadmap.
+- `feature/playback` — fase 4 del roadmap.
 
 ### Añadido
 
@@ -32,5 +33,12 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - Grabar notas de voz desde el Diario (botón 🎙): hoja inferior con tiempo, nivel de entrada, Pausa/Continuar, Descartar (con confirmación, también al pulsar atrás) y Enviar. AAC-LC `.m4a` en mono a 64 kbps, máximo de 45 min, pantalla encendida mientras graba y pausa al salir de la app.
 - Subida de la nota (`POST /api/v1/audios`) con progreso, aviso según el resultado (nueva, ya subida o vuelta a transcribir) y recarga del Diario. Si falla, la hoja se queda abierta con «Reintentar» y «Descartar» (sin cola de subidas).
 - Micrófono del PC en el emulador (socket de PulseAudio/PipeWire del host y `-allow-host-audio`).
+- Escuchar las notas del Diario (botón ▶): se descargan enteras con el token a un fichero temporal, que se borra al acabar, al parar o al pasar a otra. Mientras descarga, el botón muestra el progreso y tocarlo cancela.
+- Reproductor dentro de la tarjeta con barra de salto, tiempo y velocidad (1×, 1,5×, 2×). Un audio cada vez; grabar una nota pausa la que suena.
+- Reproducción en segundo plano con controles en la notificación y en la pantalla de bloqueo («Nota del 15/10 05:02»), con `audio_service` y `just_audio`.
 - App en español, también en los textos de Material y las fechas (`flutter_localizations`, `intl`).
 - CI en GitHub Actions (formato, análisis y tests), hook `pre-commit` de formato y guardas de Claude Code (sin commits en `develop`/`main`, `dart format` al editar).
+
+### Cambiado
+
+- `make apk` para los demonios de Gradle y Kotlin al terminar: con ellos vivos el emulador se colgaba al arrancar.

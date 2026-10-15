@@ -2,7 +2,7 @@
 ///
 /// [code] es estable y es por lo que se ramifica; [message] es texto para mostrar.
 /// Además de los códigos del backend (`conflict`, `validation_failed`...), el cliente
-/// usa [networkError] e [invalidResponse].
+/// usa [networkError], [invalidResponse] y [cancelled].
 class ApiException implements Exception {
   const ApiException({
     required this.statusCode,
@@ -17,6 +17,10 @@ class ApiException implements Exception {
 
   /// Respuesta correcta que no se puede interpretar como el modelo esperado.
   static const invalidResponse = 'invalid_response';
+
+  /// La petición se canceló desde la app (p. ej. una descarga que ya no hace falta).
+  /// No es un error que se muestre.
+  static const cancelled = 'cancelled';
 
   static const unauthorized = 'unauthorized';
   static const tooManyRequests = 'too_many_requests';

@@ -19,6 +19,12 @@ void main() {
     expect(formatTime(instant), expected);
   });
 
+  test('día y mes locales de un instante UTC', () {
+    final instant = DateTime.utc(2026, 3, 5, 12);
+
+    expect(formatShortDate(instant), '05/03');
+  });
+
   test('duración en m:ss', () {
     expect(formatDuration(37), '0:37');
     expect(formatDuration(72), '1:12');

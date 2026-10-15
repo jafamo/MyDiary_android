@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import 'api_exception.dart';
@@ -59,6 +62,34 @@ class ApiClient {
 
   Future<void> delete(String path) => _send('DELETE', path, parse: (_) {});
 
+  /// Descarga un fichero (p. ej. el audio de una nota) a [savePath] y devuelve su
+  /// `Content-Type`. [onReceiveProgress] recibe los bytes recibidos y el total (`-1` si
+  /// no se sabe). Si se cancela con [cancelToken], lanza [ApiException.cancelled].
+  Future<String?> download(
+    String path,
+    String savePath, {
+    ProgressCallback? onReceiveProgress,
+    CancelToken? cancelToken,
+  }) async {
+    final token = _token();
+    final Response<List<int>> response;
+    try {
+      response = await _dio.get<List<int>>(
+        path,
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {if (token != null) 'Authorization': 'Bearer $token'},
+        ),
+      );
+    } on DioException catch (e) {
+      throw _toApiException(e, path);
+    }
+    File(savePath).writeAsBytesSync(response.data ?? const [], flush: true);
+    return response.headers.value(Headers.contentTypeHeader);
+  }
+
   Future<T> _send<T>(
     String method,
     String path, {
@@ -94,6 +125,13 @@ class ApiClient {
   }
 
   ApiException _toApiException(DioException e, String path) {
+    if (e.type == DioExceptionType.cancel) {
+      return const ApiException(
+        statusCode: null,
+        code: ApiException.cancelled,
+        message: 'Cancelado.',
+      );
+    }
     final response = e.response;
     if (response == null) {
       if (e.error is FormatException) {
@@ -109,7 +147,7 @@ class ApiClient {
     final status = response.statusCode ?? 0;
     var code = ApiException.codeForStatus(status);
     var message = 'El servidor respondió con un error ($status).';
-    final data = response.data;
+    final data = _errorBody(response.data);
     if (data is Map && data['code'] is String && data['message'] is String) {
       code = data['code'] as String;
       message = data['message'] as String;
@@ -125,6 +163,18 @@ class ApiClient {
       message: message,
       retryAfter: status == 429 ? _retryAfter(response) : null,
     );
+  }
+
+  /// En una descarga el cuerpo del error llega en bytes.
+  Object? _errorBody(Object? data) {
+    if (data is! List<int>) {
+      return data;
+    }
+    try {
+      return jsonDecode(utf8.decode(data));
+    } on FormatException {
+      return null;
+    }
   }
 
   Duration? _retryAfter(Response<Object?> response) {

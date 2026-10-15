@@ -1,5 +1,6 @@
 package com.jfarinos.mydiary
 
-import io.flutter.embedding.android.FlutterActivity
+import com.ryanheise.audioservice.AudioServiceActivity
 
-class MainActivity : FlutterActivity()
+// audio_service necesita compartir el motor de Flutter con su servicio de reproducción.
+class MainActivity : AudioServiceActivity()

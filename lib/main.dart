@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'config/app_config.dart';
+import 'playback/player.dart';
 import 'providers.dart';
 
-void main() {
+Future<void> main() async {
   final AppConfig config;
   try {
     config = AppConfig.fromEnvironment();
@@ -14,9 +15,15 @@ void main() {
     return;
   }
 
+  WidgetsFlutterBinding.ensureInitialized();
+  final player = await startPlayerService();
+
   runApp(
     ProviderScope(
-      overrides: [appConfigProvider.overrideWithValue(config)],
+      overrides: [
+        appConfigProvider.overrideWithValue(config),
+        playerProvider.overrideWithValue(player),
+      ],
       child: const MyDiaryApp(),
     ),
   );

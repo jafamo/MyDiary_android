@@ -54,6 +54,8 @@ apk:
 	$(RUNNING)
 	$(HAS_ENV)
 	$(EXEC) flutter build apk --debug --dart-define-from-file=$(ENV_FILE)
+	@# Los demonios de Gradle y Kotlin se quedan vivos (~3 GB) y cuelgan el emulador al arrancarlo.
+	$(EXEC) sh -c 'cd android && ./gradlew --stop -q; pkill -f [K]otlinCompileDaemon; true'
 
 # Ejecuta en un móvil conectado por depuración inalámbrica (make adb-pair / make adb-connect).
 # DEVICE=<id> si hay varios (ver make devices).

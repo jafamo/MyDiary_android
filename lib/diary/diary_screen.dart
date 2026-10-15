@@ -9,6 +9,8 @@ import '../models/audio.dart';
 import '../models/diary.dart';
 import '../models/summary.dart';
 import '../models/summary_generation.dart';
+import '../playback/note_player.dart';
+import '../playback/playback_controller.dart';
 import '../recording/recording_sheet.dart';
 import '../screens/account_menu.dart';
 import 'diary_provider.dart';
@@ -93,6 +95,12 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     ref.listen(diaryProvider, (_, next) {
       if (!next.isLoading) {
         _schedulePoll(next.value);
+      }
+    });
+    ref.listen(playbackControllerProvider.select((p) => p.error), (_, error) {
+      if (error != null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error)));
       }
     });
     final diary = ref.watch(diaryProvider);
@@ -503,11 +511,7 @@ class _EntryCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.schedule,
-                  size: 16,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                PlayButton(audio: audio),
                 const SizedBox(width: 4),
                 Text(
                   '${formatTime(audio.receivedAt)} · '
@@ -518,6 +522,7 @@ class _EntryCard extends StatelessWidget {
                 _StatusLabel(status: audio.status),
               ],
             ),
+            NotePlayerBar(audio: audio),
             const SizedBox(height: 8),
             switch (audio.status) {
               AudioStatus.transcribed when transcription != null =>

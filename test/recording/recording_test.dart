@@ -36,7 +36,7 @@ void main() {
       backend: backend,
       storage: MemoryTokenStorage(storedSession),
       recorder: recorder,
-      recordingDirectory: directory,
+      temporaryDirectory: directory,
     );
     await tester.pumpWidget(
       UncontrolledProviderScope(

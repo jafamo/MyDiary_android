@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'api/api_client.dart';
 import 'auth/auth_token.dart';
@@ -21,4 +24,10 @@ final apiClientProvider = Provider<ApiClient>(
     onUnauthorized: () => ref.read(authTokenProvider.notifier).clear(),
     dio: ref.watch(dioProvider),
   ),
+);
+
+/// Carpeta de las grabaciones y de los audios descargados para escucharlos. Los tests la
+/// sustituyen por una temporal propia.
+final temporaryDirectoryProvider = FutureProvider<Directory>(
+  (ref) => getTemporaryDirectory(),
 );

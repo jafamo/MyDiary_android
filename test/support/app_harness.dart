@@ -8,11 +8,12 @@ import 'package:mydiary/auth/session.dart';
 import 'package:mydiary/auth/token_storage.dart';
 import 'package:mydiary/config/app_config.dart';
 import 'package:mydiary/providers.dart';
+import 'package:mydiary/playback/player.dart';
 import 'package:mydiary/recording/recorder.dart';
-import 'package:mydiary/recording/recording_controller.dart';
 
 import '../fixtures.dart';
 import 'fake_http.dart';
+import 'fake_player.dart';
 import 'fake_recorder.dart';
 
 const testDeviceName = 'Test Phone (Android 16)';
@@ -39,7 +40,7 @@ class MemoryTokenStorage implements TokenStorage {
   Future<void> clear() async => session = null;
 }
 
-/// Backend falso con las respuestas felices de login, me, logout, diario y subida. Cada test cambia
+/// Backend falso con las respuestas felices de login, me, logout, diario, subida y descarga. Cada test cambia
 /// [FakeAdapter.handler] para los casos de error.
 FakeAdapter fakeBackend() => FakeAdapter((options) {
   return switch ('${options.method} ${options.uri.path}') {
@@ -48,16 +49,28 @@ FakeAdapter fakeBackend() => FakeAdapter((options) {
     'POST /api/v1/logout' => emptyResponse(204),
     'GET /api/v1/diario' => jsonResponse(200, fixture('diary')),
     'POST /api/v1/audios' => jsonResponse(201, fixture('audio_upload')),
+    final call
+        when call.startsWith('GET /api/v1/audios/') &&
+            call.endsWith('/fichero') =>
+      ResponseBody.fromBytes(
+        [0, 1, 2, 3],
+        200,
+        headers: {
+          Headers.contentTypeHeader: ['audio/mp4'],
+        },
+      ),
     final call => throw StateError('Petición inesperada: $call'),
   };
 });
 
-/// [recorder] y [recordingDirectory] sustituyen al micrófono y a la carpeta temporal.
+/// [recorder], [player] y [temporaryDirectory] sustituyen al micrófono, al reproductor y a la
+/// carpeta temporal.
 ProviderContainer createTestContainer({
   required FakeAdapter backend,
   required MemoryTokenStorage storage,
   FakeRecorder? recorder,
-  Directory? recordingDirectory,
+  FakePlayer? player,
+  Directory? temporaryDirectory,
 }) {
   final container = ProviderContainer(
     overrides: [
@@ -68,9 +81,10 @@ ProviderContainer createTestContainer({
       tokenStorageProvider.overrideWithValue(storage),
       deviceNameProvider.overrideWith((ref) async => testDeviceName),
       if (recorder != null) recorderProvider.overrideWith((ref) => recorder),
-      if (recordingDirectory != null)
-        recordingDirectoryProvider.overrideWith(
-          (ref) async => recordingDirectory,
+      playerProvider.overrideWithValue(player ?? FakePlayer()),
+      if (temporaryDirectory != null)
+        temporaryDirectoryProvider.overrideWith(
+          (ref) async => temporaryDirectory,
         ),
     ],
   );
