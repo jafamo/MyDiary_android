@@ -47,6 +47,8 @@ Reproductor con salto (`just_audio` + Bearer + `Range`).
 
 ### Fase 5 — Resto de lectura
 
+> Historial hecho en el change `history` (rama `feature/history`): calendario propio de lunes a domingo con pastilla del nº de notas y punto si hay resumen, cambio de mes con ‹/› y deslizando; pantalla del día (`/historial/:fecha`) con resumen, filtro y notas con ▶, y flechas al día con notas anterior y siguiente (`previous_date`/`next_date`, requieren un backend posterior a 0.19.0). Pendiente: Resúmenes, Búsqueda, Recordatorios, Estadísticas y Temas.
+
 Historial (calendario propio), Resúmenes, Búsqueda, Recordatorios (+ campana), Estadísticas (gráficos en la app), Temas.
 
 ### Fase 6 — Escritura

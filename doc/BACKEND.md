@@ -53,7 +53,7 @@ Nunca se exponen rutas de ficheros, embeddings, `content_hash` ni identificadore
 |---|---|---|
 | `GET /api/v1/diario?status=` | Diario | `date`, `entries` (`[Audio]` detalle), `summary`, `summary_generation`, `streak {current, best}`, `week {total, delta}`, `top_topic {name, count}` |
 | `GET /api/v1/historial?month=AAAA-MM` | Calendario | `month`, `previous_month`, `next_month`, `days [{date, audio_count, has_summary}]` (solo días con datos; la rejilla la pinta la app) |
-| `GET /api/v1/historial/{fecha}?status=` | Día del historial | audios y resumen; día vacío = `200` con listas vacías |
+| `GET /api/v1/historial/{fecha}?status=` | Día del historial | audios y resumen; día vacío = `200` con listas vacías. `previous_date` / `next_date`: día con audios o resumen más cercano antes y después (`null` si no hay; no dependen de `status`). Backend > 0.19.0 (sin publicar aún) |
 | `GET /api/v1/resumenes?from=&to=&page=&per_page=` | Resúmenes | paginado, del más reciente al más antiguo, con `audio_count`; `from`/`to` los dos o ninguno |
 | `GET /api/v1/busqueda?q=` | Búsqueda | `query`, `results [{type: transcription\|daily_summary, distance, date, audio, summary}]` (menor `distance` = más parecido), `reminders [Reminder]`. Si falla el embedding, `results` vacío pero `reminders` sí llega |
 | `GET /api/v1/estadisticas?range=&from=&to=&status=` | Estadísticas | `range`: `15`, `30` (defecto), `90`, `365` o `custom` con `from`/`to`. Series crudas (`series`, `reminders_series` como `[{date, value}]`), totales, medias, `status_counts`, `topic_frequency`, rachas, `record_day`, `previous_period_comparison`, `ai_usage {totals, days}`. Los gráficos los dibuja la app |

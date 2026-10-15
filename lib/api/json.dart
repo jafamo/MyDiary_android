@@ -14,6 +14,7 @@ Json asJson(Object? value) {
 }
 
 final _day = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$');
+final _month = RegExp(r'^(\d{4})-(\d{2})$');
 
 extension JsonRead on Json {
   T _read<T>(String key) {
@@ -78,4 +79,15 @@ extension JsonRead on Json {
   }
 
   DateTime? dayOrNull(String key) => this[key] == null ? null : day(key);
+
+  /// Mes (`AAAA-MM`) como su día 1, con las mismas reglas que [day].
+  DateTime month(String key) {
+    final value = string(key);
+    final match = _month.firstMatch(value);
+    final month = match == null ? 0 : int.parse(match.group(2)!);
+    if (month < 1 || month > 12) {
+      throw FormatException('Campo "$key": mes no válido "$value".');
+    }
+    return DateTime(int.parse(match!.group(1)!), month);
+  }
 }

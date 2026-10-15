@@ -27,3 +27,11 @@ String capitalize(String text) =>
 /// «1 audio», «3 audios».
 String plural(int count, String singular, String pluralForm) =>
     '$count ${count == 1 ? singular : pluralForm}';
+
+/// Día de calendario con el año («miércoles, 14 de octubre de 2026»).
+String formatDayWithYear(DateTime day) =>
+    DateFormat("EEEE, d 'de' MMMM 'de' y", _locale).format(day);
+
+/// Mes de calendario con el año («octubre de 2026»).
+String formatMonth(DateTime month) =>
+    DateFormat("MMMM 'de' y", _locale).format(month);

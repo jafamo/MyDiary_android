@@ -1,0 +1,11 @@
+{
+  "month": "2026-10",
+  "previous_month": "2026-09",
+  "next_month": "2026-11",
+  "days": [
+    {"date": "2026-10-02", "audio_count": 0, "has_summary": true},
+    {"date": "2026-10-03", "audio_count": 1, "has_summary": false},
+    {"date": "2026-10-13", "audio_count": 12, "has_summary": true},
+    {"date": "2026-10-14", "audio_count": 3, "has_summary": true}
+  ]
+}

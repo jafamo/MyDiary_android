@@ -40,8 +40,8 @@ class MemoryTokenStorage implements TokenStorage {
   Future<void> clear() async => session = null;
 }
 
-/// Backend falso con las respuestas felices de login, me, logout, diario, subida y descarga. Cada test cambia
-/// [FakeAdapter.handler] para los casos de error.
+/// Backend falso con las respuestas felices de login, me, logout, diario, subida, descarga e
+/// historial. Cada test cambia [FakeAdapter.handler] para los casos de error.
 FakeAdapter fakeBackend() => FakeAdapter((options) {
   return switch ('${options.method} ${options.uri.path}') {
     'POST /api/v1/login' => jsonResponse(200, fixture('login')),
@@ -49,6 +49,11 @@ FakeAdapter fakeBackend() => FakeAdapter((options) {
     'POST /api/v1/logout' => emptyResponse(204),
     'GET /api/v1/diario' => jsonResponse(200, fixture('diary')),
     'POST /api/v1/audios' => jsonResponse(201, fixture('audio_upload')),
+    'GET /api/v1/historial' => jsonResponse(200, fixture('history_month')),
+    final call when call.startsWith('GET /api/v1/historial/') => jsonResponse(
+      200,
+      {...fixture('history_day'), 'date': call.split('/').last},
+    ),
     final call
         when call.startsWith('GET /api/v1/audios/') &&
             call.endsWith('/fichero') =>

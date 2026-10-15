@@ -223,7 +223,7 @@ void main() {
   testWidgets('con la pestaña oculta no recarga', (tester) async {
     await startApp(tester);
 
-    await tester.tap(find.text('Historial'));
+    await tester.tap(find.text('Buscar'));
     await tester.pumpAndSettle();
     expect(find.text('Llega en una próxima versión.'), findsOneWidget);
 

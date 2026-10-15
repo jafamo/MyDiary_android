@@ -41,8 +41,8 @@ Con sesión, la app SHALL mostrar una barra de navegación inferior con cuatro s
 - **THEN** se muestra la sección Diario con la barra inferior
 
 #### Scenario: Cambiar de sección
-- **WHEN** el usuario pulsa «Historial» en la barra inferior
-- **THEN** se muestra la sección Historial con «Llega en una próxima versión.»
+- **WHEN** el usuario pulsa «Buscar» en la barra inferior
+- **THEN** se muestra la sección Buscar con «Llega en una próxima versión.»
 
 ### Requirement: Idioma
 La app SHALL estar en español, incluidos los textos propios de Material (diálogos, accesibilidad) y el formato de fechas.

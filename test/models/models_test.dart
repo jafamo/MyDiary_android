@@ -3,6 +3,7 @@ import 'package:mydiary/api/json.dart';
 import 'package:mydiary/models/audio.dart';
 import 'package:mydiary/models/audio_upload.dart';
 import 'package:mydiary/models/diary.dart';
+import 'package:mydiary/models/history.dart';
 import 'package:mydiary/models/paginated.dart';
 import 'package:mydiary/models/reminder.dart';
 import 'package:mydiary/models/summary.dart';
@@ -219,6 +220,56 @@ void main() {
       expect(UploadResult.fromJson('duplicate'), UploadResult.duplicate);
       expect(UploadResult.fromJson('retrying'), UploadResult.retrying);
       expect(UploadResult.fromJson('otro'), UploadResult.unknown);
+    });
+  });
+
+  group('Historial', () {
+    test('mes con los días con actividad', () {
+      final month = HistoryMonth.fromJson(fixture('history_month'));
+
+      expect(month.month, DateTime(2026, 10));
+      expect(month.previousMonth, DateTime(2026, 9));
+      expect(month.nextMonth, DateTime(2026, 11));
+      expect(month.days, hasLength(4));
+      expect(month.days[2].date, DateTime(2026, 10, 13));
+      expect(month.days[2].audioCount, 12);
+      expect(month.days[2].hasSummary, isTrue);
+      expect(month.days[1].hasSummary, isFalse);
+    });
+
+    test('mes no válido', () {
+      for (final value in ['2026-13', '2026-00', '2026-1', '2026-10-01']) {
+        expect(
+          () => <String, Object?>{'month': value}.month('month'),
+          throwsFormatException,
+          reason: value,
+        );
+      }
+    });
+
+    test('día con audios y resumen', () {
+      final day = HistoryDay.fromJson(fixture('history_day'));
+
+      expect(day.date, DateTime(2026, 10, 14));
+      expect(day.entries.map((e) => e.id), [42, 43, 44]);
+      expect(day.summary?.id, 9);
+      expect(day.previousDate, DateTime(2026, 10, 13));
+      expect(day.nextDate, isNull);
+    });
+
+    test('día vacío', () {
+      final day = HistoryDay.fromJson({
+        'date': '2026-10-02',
+        'entries': [],
+        'summary': null,
+        'previous_date': null,
+        'next_date': '2026-10-03',
+      });
+
+      expect(day.entries, isEmpty);
+      expect(day.summary, isNull);
+      expect(day.previousDate, isNull);
+      expect(day.nextDate, DateTime(2026, 10, 3));
     });
   });
 }

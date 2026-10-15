@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import 'auth/session_notifier.dart';
 import 'diary/diary_screen.dart';
+import 'history/day_screen.dart';
+import 'history/history_provider.dart';
+import 'history/history_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/more_screen.dart';
@@ -17,6 +20,9 @@ abstract final class Routes {
   static const history = '/historial';
   static const search = '/buscar';
   static const more = '/mas';
+
+  /// Un día del Historial (`/historial/2026-10-14`).
+  static String historyDay(DateTime date) => '$history/${formatDayParam(date)}';
 }
 
 /// Mientras se comprueba la sesión, `/splash`; sin sesión, `/login`; con sesión, el resto.
@@ -61,8 +67,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.history,
-                builder: (context, state) =>
-                    const UpcomingScreen(title: 'Historial'),
+                builder: (context, state) => const HistoryScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':fecha',
+                    redirect: (context, state) =>
+                        parseDayParam(state.pathParameters['fecha']!) == null
+                        ? Routes.history
+                        : null,
+                    builder: (context, state) => DayScreen(
+                      date: parseDayParam(state.pathParameters['fecha']!)!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

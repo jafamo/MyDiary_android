@@ -26,12 +26,13 @@ final diaryProvider = FutureProvider.autoDispose<Diary>((ref) {
       .watch(apiClientProvider)
       .get(
         '/diario',
-        query: {if (status != null) 'status': _statusParam(status)},
+        query: {if (status != null) 'status': statusParam(status)},
         parse: (json) => Diary.fromJson(asJson(json)),
       );
 }, retry: (_, _) => null);
 
-String _statusParam(AudioStatus status) => switch (status) {
+/// Valor del parámetro `status` de la API.
+String statusParam(AudioStatus status) => switch (status) {
   AudioStatus.pending => 'PENDING',
   AudioStatus.transcribed => 'TRANSCRIBED',
   AudioStatus.error => 'ERROR',

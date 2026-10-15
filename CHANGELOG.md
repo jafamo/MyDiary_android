@@ -12,6 +12,7 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - `feature/diary` — fase 2 del roadmap.
 - `feature/recording` — fase 3 del roadmap.
 - `feature/playback` — fase 4 del roadmap.
+- `feature/history` — fase 5 del roadmap: Historial.
 
 ### Añadido
 
@@ -36,6 +37,8 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - Escuchar las notas del Diario (botón ▶): se descargan enteras con el token a un fichero temporal, que se borra al acabar, al parar o al pasar a otra. Mientras descarga, el botón muestra el progreso y tocarlo cancela.
 - Reproductor dentro de la tarjeta con barra de salto, tiempo y velocidad (1×, 1,5×, 2×). Un audio cada vez; grabar una nota pausa la que suena.
 - Reproducción en segundo plano con controles en la notificación y en la pantalla de bloqueo («Nota del 15/10 05:02»), con `audio_service` y `just_audio`.
+- Historial: calendario mensual de lunes a domingo con el nº de notas de cada día en una pastilla de color y un punto si hay resumen; cambio de mes con ‹/› o deslizando, y hoy marcado con un círculo.
+- Pantalla de un día del historial con su resumen, filtro por estado y notas con ▶, y flechas para saltar al día con notas anterior o siguiente sin pasar por los vacíos (requiere un backend posterior a 0.19.0; con uno anterior salen desactivadas).
 - App en español, también en los textos de Material y las fechas (`flutter_localizations`, `intl`).
 - CI en GitHub Actions (formato, análisis y tests), hook `pre-commit` de formato y guardas de Claude Code (sin commits en `develop`/`main`, `dart format` al editar).
 
