@@ -37,4 +37,6 @@ ENV PATH=${ANDROID_HOME}/emulator:${PATH}
 #   que impiden volver a arrancarlo, así que se limpian antes de cada arranque.
 # - -feature -WiFiPacketStream: sin él la Wi-Fi pasa por netsim, que en el contenedor se cae y deja
 #   Android sin red (Wi-Fi en "CONNECTING", sin IP). Así usa el punto de acceso interno del emulador.
-CMD ["sh", "-c", "rm -rf /home/builder/.android/avd/mydiary.avd/*.lock && exec emulator -avd mydiary -gpu swiftshader_indirect -no-snapshot-save -no-boot-anim -no-audio -feature -WiFiPacketStream"]
+# - -allow-host-audio: el micrófono del emulador recibe el del host (por defecto le llega silencio).
+#   El audio sale por el socket de PulseAudio que monta docker-compose.yml.
+CMD ["sh", "-c", "rm -rf /home/builder/.android/avd/mydiary.avd/*.lock && exec emulator -avd mydiary -gpu swiftshader_indirect -no-snapshot-save -no-boot-anim -allow-host-audio -feature -WiFiPacketStream"]

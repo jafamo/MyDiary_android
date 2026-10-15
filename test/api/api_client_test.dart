@@ -71,6 +71,26 @@ void main() {
     );
   });
 
+  test('subida multipart con aviso de progreso', () async {
+    token = 'abc';
+    respond((_) => jsonResponse(201, <String, Object?>{}));
+    void progress(int sent, int total) {}
+
+    await client.post(
+      '/audios',
+      body: FormData.fromMap({
+        'file': MultipartFile.fromBytes([1, 2, 3], filename: 'nota.m4a'),
+      }),
+      parse: (_) => null,
+      onSendProgress: progress,
+    );
+
+    final request = adapter.requests.single;
+    expect(request.data, isA<FormData>());
+    expect((request.data as FormData).files.single.key, 'file');
+    expect(request.onSendProgress, isNotNull);
+  });
+
   test('pasa los parámetros de consulta', () async {
     token = 'abc';
     respond((_) => jsonResponse(200, <String, Object?>{}));

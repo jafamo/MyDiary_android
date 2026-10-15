@@ -8,9 +8,12 @@ import 'package:mydiary/auth/session.dart';
 import 'package:mydiary/auth/token_storage.dart';
 import 'package:mydiary/config/app_config.dart';
 import 'package:mydiary/providers.dart';
+import 'package:mydiary/recording/recorder.dart';
+import 'package:mydiary/recording/recording_controller.dart';
 
 import '../fixtures.dart';
 import 'fake_http.dart';
+import 'fake_recorder.dart';
 
 const testDeviceName = 'Test Phone (Android 16)';
 
@@ -36,7 +39,7 @@ class MemoryTokenStorage implements TokenStorage {
   Future<void> clear() async => session = null;
 }
 
-/// Backend falso con las respuestas felices de login, me, logout y diario. Cada test cambia
+/// Backend falso con las respuestas felices de login, me, logout, diario y subida. Cada test cambia
 /// [FakeAdapter.handler] para los casos de error.
 FakeAdapter fakeBackend() => FakeAdapter((options) {
   return switch ('${options.method} ${options.uri.path}') {
@@ -44,13 +47,17 @@ FakeAdapter fakeBackend() => FakeAdapter((options) {
     'GET /api/v1/me' => jsonResponse(200, fixture('me')),
     'POST /api/v1/logout' => emptyResponse(204),
     'GET /api/v1/diario' => jsonResponse(200, fixture('diary')),
+    'POST /api/v1/audios' => jsonResponse(201, fixture('audio_upload')),
     final call => throw StateError('Petición inesperada: $call'),
   };
 });
 
+/// [recorder] y [recordingDirectory] sustituyen al micrófono y a la carpeta temporal.
 ProviderContainer createTestContainer({
   required FakeAdapter backend,
   required MemoryTokenStorage storage,
+  FakeRecorder? recorder,
+  Directory? recordingDirectory,
 }) {
   final container = ProviderContainer(
     overrides: [
@@ -60,6 +67,11 @@ ProviderContainer createTestContainer({
       dioProvider.overrideWithValue(Dio()..httpClientAdapter = backend),
       tokenStorageProvider.overrideWithValue(storage),
       deviceNameProvider.overrideWith((ref) async => testDeviceName),
+      if (recorder != null) recorderProvider.overrideWith((ref) => recorder),
+      if (recordingDirectory != null)
+        recordingDirectoryProvider.overrideWith(
+          (ref) async => recordingDirectory,
+        ),
     ],
   );
   addTearDown(container.dispose);

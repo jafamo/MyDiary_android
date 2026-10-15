@@ -11,7 +11,7 @@ Se deciden al proponer la fase correspondiente (regla «Opciones de diseño ante
 - ~~**D3 — Modelos**~~ — decidida: **`fromJson` escritos a mano**, uno por esquema de `openapi.json`.
 - **D4 — Audios Ogg/Opus de Telegram en iOS** (antes de la fase iOS): convertir a `.m4a` en el backend (preferida) o reproductor alternativo en la app (`media_kit`, sin confirmar soporte de Opus en iOS).
 - **D5 — Push** (fase 7): el backend preveía APNs directo porque «solo hay iPhone»; con Android, FCM (`firebase_messaging`) cubre las dos plataformas. Revisar D5 del backend.
-- **D6 — Subidas sin cobertura** (fase 3): subir solo en primer plano con reintento manual, o cola local persistente con subida en segundo plano (`background_downloader`). La subida es idempotente por contenido, así que reintentar es seguro.
+- ~~**D6 — Subidas sin cobertura**~~ — decidida: **sin cola**. Si la subida falla, la hoja de grabación conserva la nota con «Reintentar» mientras la app siga abierta; al cerrarla se pierde. La nota queda con la fecha de la subida (el backend no recibe la hora de grabación), aceptado.
 
 ## Fases
 
@@ -33,7 +33,9 @@ Login (`username`, `password`, `device_name` del dispositivo), token en `flutter
 
 Portada con las entradas de hoy, estado de cada audio, transcripción, resumen, rachas, semana y tema del mes. Filtro por estado. Pull-to-refresh.
 
-### Fase 3 — Grabar y subir
+### Fase 3 — Grabar y subir ✅
+
+> Hecha en el change `recording` (rama `feature/recording`). Botón 🎙 en el Diario que abre una hoja inferior con tiempo, nivel de entrada, Pausa, Descartar y Enviar. AAC-LC `.m4a` en mono a 64 kbps, máximo de 45 min, pantalla encendida mientras graba y pausa al salir de la app. Subida con progreso y aviso según `result`; si falla, «Reintentar» desde la hoja (D6: sin cola). Micrófono del PC en el emulador.
 
 Grabación AAC `.m4a` (`record`), permisos de micrófono, subida multipart, resultado `created` / `duplicate` / `retrying`. D6.
 

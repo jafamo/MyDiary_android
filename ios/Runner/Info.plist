@@ -8,6 +8,8 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>MyDiary</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>MyDiary usa el micrófono para grabar tus notas de voz.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

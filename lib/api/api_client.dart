@@ -36,12 +36,20 @@ class ApiClient {
     required JsonParser<T> parse,
   }) => _send('GET', path, query: query, parse: parse);
 
-  /// [body] es un objeto JSON o un [FormData] (subida multipart).
+  /// [body] es un objeto JSON o un [FormData] (subida multipart). [onSendProgress]
+  /// recibe los bytes enviados y el total.
   Future<T> post<T>(
     String path, {
     Object? body,
     required JsonParser<T> parse,
-  }) => _send('POST', path, body: body, parse: parse);
+    ProgressCallback? onSendProgress,
+  }) => _send(
+    'POST',
+    path,
+    body: body,
+    parse: parse,
+    onSendProgress: onSendProgress,
+  );
 
   Future<T> patch<T>(
     String path, {
@@ -57,6 +65,7 @@ class ApiClient {
     Object? body,
     Map<String, Object?>? query,
     required JsonParser<T> parse,
+    ProgressCallback? onSendProgress,
   }) async {
     final token = _token();
     final Response<Object?> response;
@@ -65,6 +74,7 @@ class ApiClient {
         path,
         data: body,
         queryParameters: query,
+        onSendProgress: onSendProgress,
         options: Options(
           method: method,
           headers: {if (token != null) 'Authorization': 'Bearer $token'},

@@ -9,6 +9,7 @@ import '../models/audio.dart';
 import '../models/diary.dart';
 import '../models/summary.dart';
 import '../models/summary_generation.dart';
+import '../recording/recording_sheet.dart';
 import '../screens/account_menu.dart';
 import 'diary_provider.dart';
 
@@ -77,6 +78,16 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     }
   }
 
+  Future<void> _record() async {
+    final upload = await showRecordingSheet(context);
+    if (upload == null || !mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(uploadMessage(upload.result))));
+    ref.invalidate(diaryProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(diaryProvider, (_, next) {
@@ -96,6 +107,11 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                 child: LinearProgressIndicator(minHeight: 2),
               )
             : null,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _record,
+        tooltip: 'Grabar nota',
+        child: const Icon(Icons.mic),
       ),
       body: switch (diary) {
         AsyncValue(:final value?) => RefreshIndicator(
@@ -162,7 +178,8 @@ class _DiaryView extends ConsumerWidget {
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      // Abajo, sitio para el botón de grabar.
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
       children: [
         if (refreshError != null) ...[
           _RefreshErrorBanner(error: refreshError),

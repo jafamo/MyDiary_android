@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mydiary/api/json.dart';
 import 'package:mydiary/models/audio.dart';
+import 'package:mydiary/models/audio_upload.dart';
 import 'package:mydiary/models/diary.dart';
 import 'package:mydiary/models/paginated.dart';
 import 'package:mydiary/models/reminder.dart';
@@ -200,6 +201,24 @@ void main() {
           isFalse,
         );
       });
+    });
+  });
+
+  group('AudioUpload', () {
+    test('audio breve con el resultado', () {
+      final upload = AudioUpload.fromJson(fixture('audio_upload'));
+
+      expect(upload.result, UploadResult.created);
+      expect(upload.audio.id, 45);
+      expect(upload.audio.status, AudioStatus.pending);
+      expect(upload.audio.source, AudioSource.app);
+      expect(upload.audio.transcription, isNull);
+    });
+
+    test('resultados conocidos y desconocidos', () {
+      expect(UploadResult.fromJson('duplicate'), UploadResult.duplicate);
+      expect(UploadResult.fromJson('retrying'), UploadResult.retrying);
+      expect(UploadResult.fromJson('otro'), UploadResult.unknown);
     });
   });
 }

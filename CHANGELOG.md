@@ -10,6 +10,7 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - `feature/android-emulator` — emulador de Android opcional en Docker.
 - `feature/login` — fase 1 del roadmap.
 - `feature/diary` — fase 2 del roadmap.
+- `feature/recording` — fase 3 del roadmap.
 
 ### Añadido
 
@@ -28,5 +29,8 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - Portada del Diario (`GET /api/v1/diario`): fecha de hoy, racha, audios de la semana, tema del mes, resumen del día plegable (con leyenda de emojis, temas y estado de la generación), filtro por estado y entradas con hora, duración, estado y transcripción («Ver más» en las largas).
 - Recarga del Diario al deslizar, al volver a la app y, mientras haya un audio pendiente o un resumen en curso, cada 10 s con la app en primer plano y la pestaña visible. Si falla una recarga se mantienen los datos con un aviso.
 - Barra de navegación inferior con Diario, Historial, Buscar y Más (las tres últimas, provisionales).
+- Grabar notas de voz desde el Diario (botón 🎙): hoja inferior con tiempo, nivel de entrada, Pausa/Continuar, Descartar (con confirmación, también al pulsar atrás) y Enviar. AAC-LC `.m4a` en mono a 64 kbps, máximo de 45 min, pantalla encendida mientras graba y pausa al salir de la app.
+- Subida de la nota (`POST /api/v1/audios`) con progreso, aviso según el resultado (nueva, ya subida o vuelta a transcribir) y recarga del Diario. Si falla, la hoja se queda abierta con «Reintentar» y «Descartar» (sin cola de subidas).
+- Micrófono del PC en el emulador (socket de PulseAudio/PipeWire del host y `-allow-host-audio`).
 - App en español, también en los textos de Material y las fechas (`flutter_localizations`, `intl`).
 - CI en GitHub Actions (formato, análisis y tests), hook `pre-commit` de formato y guardas de Claude Code (sin commits en `develop`/`main`, `dart format` al editar).

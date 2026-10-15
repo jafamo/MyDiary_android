@@ -33,10 +33,13 @@ services:
     environment:
       DISPLAY: ${DISPLAY:-:0}
       QT_X11_NO_MITSHM: "1"
+      # Micrófono: el servidor PulseAudio del escritorio (o pipewire-pulse).
+      PULSE_SERVER: unix:/run/pulse/native
     volumes:
       # Ventana en el escritorio del host (X11/XWayland), con la cookie de la sesión actual.
       - /tmp/.X11-unix:/tmp/.X11-unix:ro
       - ${XAUTHORITY:-/dev/null}:/home/builder/.Xauthority:ro
+      - ${XDG_RUNTIME_DIR:-/run/user/1000}/pulse/native:/run/pulse/native
       # Estado del emulador (app instalada, datos) entre arranques; make emulator-reset lo borra.
       - emulator-avd:/home/builder/.android/avd
 
