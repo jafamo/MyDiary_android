@@ -54,3 +54,16 @@ class EmojiLegendEntry {
   final String emoji;
   final String meaning;
 }
+
+/// Elemento de `GET /api/v1/resumenes`: el `Summary` con los audios de ese día.
+class SummaryListItem {
+  const SummaryListItem({required this.summary, required this.audioCount});
+
+  factory SummaryListItem.fromJson(Json json) => SummaryListItem(
+    summary: Summary.fromJson(json),
+    audioCount: json.integer('audio_count'),
+  );
+
+  final Summary summary;
+  final int audioCount;
+}

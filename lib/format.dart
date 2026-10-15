@@ -35,3 +35,23 @@ String formatDayWithYear(DateTime day) =>
 /// Mes de calendario con el año («octubre de 2026»).
 String formatMonth(DateTime month) =>
     DateFormat("MMMM 'de' y", _locale).format(month);
+
+/// Día de calendario abreviado con el año («Mié 14 oct 2026»).
+String formatShortDay(DateTime day) =>
+    capitalize(DateFormat('EEE d MMM y', _locale).format(day));
+
+/// Rango de días («1 mar – 15 mar 2026»; con el año en los dos si cambia).
+String formatDayRange(DateTime from, DateTime to) {
+  final start = DateFormat(
+    from.year == to.year ? 'd MMM' : 'd MMM y',
+    _locale,
+  ).format(from);
+  return '$start – ${DateFormat('d MMM y', _locale).format(to)}';
+}
+
+/// Número con separador de miles («3.412»).
+String formatNumber(int value) => NumberFormat('#,##0', _locale).format(value);
+
+/// Milisegundos en segundos con un decimal como mucho («38 s», «14,2 s»).
+String formatSeconds(int milliseconds) =>
+    '${NumberFormat('0.#', _locale).format(milliseconds / 1000)} s';

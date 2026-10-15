@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-/// Resto de secciones. De momento, todas pendientes (fase 5).
+import '../router.dart';
+
+/// Resto de secciones. Las que aún no tienen pantalla salen como «Próximamente» (fase 5).
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
 
   static const _sections = [
-    (Icons.auto_stories_outlined, 'Resúmenes'),
-    (Icons.notifications_outlined, 'Recordatorios'),
-    (Icons.bar_chart, 'Estadísticas'),
-    (Icons.sell_outlined, 'Temas'),
+    (Icons.auto_stories_outlined, 'Resúmenes', Routes.summaries),
+    (Icons.notifications_outlined, 'Recordatorios', null),
+    (Icons.bar_chart, 'Estadísticas', null),
+    (Icons.sell_outlined, 'Temas', null),
   ];
 
   @override
@@ -17,12 +20,14 @@ class MoreScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Más')),
       body: ListView(
         children: [
-          for (final (icon, title) in _sections)
+          for (final (icon, title, route) in _sections)
             ListTile(
-              enabled: false,
+              enabled: route != null,
               leading: Icon(icon),
               title: Text(title),
-              subtitle: const Text('Próximamente'),
+              subtitle: route == null ? const Text('Próximamente') : null,
+              trailing: route == null ? null : const Icon(Icons.chevron_right),
+              onTap: route == null ? null : () => context.go(route),
             ),
         ],
       ),

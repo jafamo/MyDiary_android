@@ -37,4 +37,25 @@ void main() {
     expect(plural(1, 'audio', 'audios'), '1 audio');
     expect(plural(3, 'audio', 'audios'), '3 audios');
   });
+
+  test('día abreviado con el año', () {
+    expect(formatShortDay(DateTime(2026, 10, 14)), 'Mié 14 oct 2026');
+  });
+
+  test('rango de días', () {
+    expect(
+      formatDayRange(DateTime(2026, 3, 1), DateTime(2026, 3, 15)),
+      '1 mar – 15 mar 2026',
+    );
+    expect(
+      formatDayRange(DateTime(2025, 12, 28), DateTime(2026, 1, 3)),
+      '28 dic 2025 – 3 ene 2026',
+    );
+  });
+
+  test('métricas de la IA', () {
+    expect(formatNumber(3412), '3.412');
+    expect(formatSeconds(38000), '38 s');
+    expect(formatSeconds(14200), '14,2 s');
+  });
 }

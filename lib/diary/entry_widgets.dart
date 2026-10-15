@@ -103,7 +103,6 @@ class SummaryCard extends StatelessWidget {
     }
 
     final theme = Theme.of(context);
-    final legend = summary.emojiLegend ?? const [];
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -117,37 +116,57 @@ class SummaryCard extends StatelessWidget {
         children: [
           if (status != null) ...[status, const SizedBox(height: 8)],
           Text(summary.summaryText),
-          if (legend.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 12,
-              runSpacing: 4,
-              children: [
-                for (final item in legend)
-                  Text(
-                    '${item.emoji} ${item.meaning}',
-                    style: theme.textTheme.bodySmall,
-                  ),
-              ],
-            ),
-          ],
-          if (summary.topics.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                for (final topic in summary.topics)
-                  Chip(
-                    avatar: const Icon(Icons.sell_outlined, size: 16),
-                    label: Text(topic.name),
-                    visualDensity: VisualDensity.compact,
-                  ),
-              ],
-            ),
-          ],
+          SummaryExtras(summary: summary),
         ],
       ),
+    );
+  }
+}
+
+/// Leyenda de emojis y temas de un resumen (nada si no tiene).
+class SummaryExtras extends StatelessWidget {
+  const SummaryExtras({super.key, required this.summary});
+
+  final Summary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final legend = summary.emojiLegend ?? const [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (legend.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 12,
+            runSpacing: 4,
+            children: [
+              for (final item in legend)
+                Text(
+                  '${item.emoji} ${item.meaning}',
+                  style: theme.textTheme.bodySmall,
+                ),
+            ],
+          ),
+        ],
+        if (summary.topics.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final topic in summary.topics)
+                Chip(
+                  avatar: const Icon(Icons.sell_outlined, size: 16),
+                  label: Text(topic.name),
+                  visualDensity: VisualDensity.compact,
+                ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }

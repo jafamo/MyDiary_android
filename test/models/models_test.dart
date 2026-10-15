@@ -101,6 +101,18 @@ void main() {
 
       expect(() => Summary.fromJson(json), throwsFormatException);
     });
+
+    test('página de resúmenes con los audios de cada día', () {
+      final page = Paginated.fromJson(
+        fixture('summaries_page'),
+        SummaryListItem.fromJson,
+      );
+
+      expect(page.items.map((i) => i.audioCount), [3, 1]);
+      expect(page.items.first.summary.date, DateTime(2026, 10, 5));
+      expect(page.items.last.summary.model, isNull);
+      expect(page.hasMore, isFalse);
+    });
   });
 
   test('SummaryGeneration atascada', () {

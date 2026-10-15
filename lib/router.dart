@@ -10,8 +10,9 @@ import 'history/history_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/more_screen.dart';
-import 'screens/upcoming_screen.dart';
 import 'screens/splash_screen.dart';
+import 'screens/upcoming_screen.dart';
+import 'summaries/summaries_screen.dart';
 
 abstract final class Routes {
   static const splash = '/splash';
@@ -20,6 +21,7 @@ abstract final class Routes {
   static const history = '/historial';
   static const search = '/buscar';
   static const more = '/mas';
+  static const summaries = '$more/resumenes';
 
   /// Un día del Historial (`/historial/2026-10-14`).
   static String historyDay(DateTime date) => '$history/${formatDayParam(date)}';
@@ -97,6 +99,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.more,
                 builder: (context, state) => const MoreScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'resumenes',
+                    builder: (context, state) => const SummariesScreen(),
+                  ),
+                ],
               ),
             ],
           ),
