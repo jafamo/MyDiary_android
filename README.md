@@ -31,4 +31,6 @@ iPhone: compilar para iOS requiere macOS (ver fase 8 de `ROADMAP.md`).
 
 En un móvil Android 11+ por depuración inalámbrica: `make adb-pair ADDR=<ip>:<puerto>`, `make adb-connect ADDR=<ip>:<puerto>` y `make run`.
 
+Publicar en Google Play (prueba interna): [`doc/RELEASE.md`](doc/RELEASE.md) — `make keystore` (una vez) y `make appbundle ENV=prod`. Política de privacidad: [`PRIVACY.md`](PRIVACY.md).
+
 Calidad: `make format-check`, `make analyze`, `make test` (los mismos pasos que la CI).

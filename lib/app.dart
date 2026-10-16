@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'router.dart';
 
+/// Verde azulado de la web de MyDiary (también el fondo del icono).
+const brandColor = Color(0xFF14968A);
+
 class MyDiaryApp extends ConsumerWidget {
   const MyDiaryApp({super.key});
 
@@ -11,7 +14,7 @@ class MyDiaryApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       title: 'MyDiary',
-      theme: ThemeData(colorSchemeSeed: Colors.indigo),
+      theme: ThemeData(colorSchemeSeed: brandColor),
       locale: const Locale('es'),
       supportedLocales: const [Locale('es')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,

@@ -14,6 +14,7 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - `feature/playback` — fase 4 del roadmap.
 - `feature/history` — fase 5 del roadmap: Historial.
 - `feature/summaries` — fase 5 del roadmap: Resúmenes.
+- `feature/android-release` — preparación para publicar en Google Play.
 
 ### Añadido
 
@@ -41,6 +42,8 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - Historial: calendario mensual de lunes a domingo con el nº de notas de cada día en una pastilla de color y un punto si hay resumen; cambio de mes con ‹/› o deslizando, y hoy marcado con un círculo.
 - Pantalla de un día del historial con su resumen, filtro por estado y notas con ▶, y flechas para saltar al día con notas anterior o siguiente sin pasar por los vacíos (requiere un backend posterior a 0.19.0; con uno anterior salen desactivadas).
 - Resúmenes, desde «Más» (que pasa a ser un menú): lista del más reciente al más antiguo con la fecha, un chip con el nº de audios (abre el día en el Historial) y las tres primeras líneas; al tocar se despliega con la leyenda de emojis, los temas y las métricas de la IA. Scroll infinito de 20 en 20 y filtro por rango de fechas con chip para quitarlo.
+- Icono de ondas de voz (adaptativo, con versión monocroma) y tema con el verde azulado de la web (`#14968A`).
+- Builds de publicación firmados: `make keystore` crea la clave de subida (no versionada) y `make appbundle` / `make apk-release` exigen la clave y una `API_BASE_URL` `https`. Política de privacidad en `PRIVACY.md` y guía de publicación en la prueba interna de Google Play en `doc/RELEASE.md`, con el icono y el gráfico destacado de la ficha en `doc/icon/` (aún sin publicar).
 - App en español, también en los textos de Material y las fechas (`flutter_localizations`, `intl`).
 - CI en GitHub Actions (formato, análisis y tests), hook `pre-commit` de formato y guardas de Claude Code (sin commits en `develop`/`main`, `dart format` al editar).
 

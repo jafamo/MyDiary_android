@@ -70,3 +70,7 @@ Build y firma para iPhone, permisos (`NSMicrophoneUsageDescription`), ATS, D4. C
 - **D7 — Dónde compilar iOS:** un Mac propio (con Apple ID gratuito, instalar por cable con `flutter run`; la app caduca a los 7 días) o compilar en la nube (Codemagic o GitHub Actions con macOS) y distribuir por TestFlight. TestFlight y push (fase 7) requieren la cuenta de Apple Developer de pago.
 
 Mientras tanto, el desarrollo se prueba en el emulador de Android en Docker (`make emulator-up`).
+
+### Publicación en Google Play (preparada, sin publicar)
+
+> Preparada en el change `android-release` (rama `feature/android-release`): firma de release, icono, `PRIVACY.md` y guía en `doc/RELEASE.md` (prueba interna). Publicar queda aplazado hasta que se decida.
