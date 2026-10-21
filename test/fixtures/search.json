@@ -1,0 +1,63 @@
+{
+  "query": "dentista",
+  "results": [
+    {
+      "type": "transcription",
+      "distance": 0.2731,
+      "date": "2026-10-08",
+      "audio": {
+        "id": 42,
+        "status": "TRANSCRIBED",
+        "source": "app",
+        "duration_seconds": 37,
+        "received_at": "2026-10-08T07:09:33Z",
+        "error_code": null,
+        "error_message": null,
+        "transcription": {
+          "id": 40,
+          "content": "Hoy he ido al dentista y luego he trabajado en el proyecto.",
+          "edited_manually": false,
+          "model": "whisper-large-v3",
+          "processing_ms": 14200,
+          "created_at": "2026-10-08T07:09:50Z",
+          "updated_at": "2026-10-08T07:09:50Z"
+        }
+      },
+      "summary": null
+    },
+    {
+      "type": "daily_summary",
+      "distance": 0.3104,
+      "date": "2026-10-05",
+      "audio": null,
+      "summary": {
+        "id": 7,
+        "date": "2026-10-05",
+        "summary_text": "💼 Día de trabajo en el proyecto.\n\n✅ Pendiente: llamar al dentista.",
+        "generated_at": "2026-10-05T19:00:12Z",
+        "emoji_legend": [
+          {"emoji": "💼", "meaning": "Trabajo"},
+          {"emoji": "✅", "meaning": "Pendientes"}
+        ],
+        "topics": [
+          {"id": 2, "name": "trabajo"},
+          {"id": 5, "name": "salud"}
+        ],
+        "model": "qwen2.5:7b",
+        "prompt_tokens": 2980,
+        "completion_tokens": 432,
+        "generation_ms": 38000
+      }
+    }
+  ],
+  "reminders": [
+    {
+      "id": 3,
+      "date": "2026-10-20",
+      "time": "10:30",
+      "text": "Dentista",
+      "created_at": "2026-10-08T07:00:00Z",
+      "updated_at": "2026-10-08T07:00:00Z"
+    }
+  ]
+}

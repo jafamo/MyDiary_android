@@ -225,7 +225,7 @@ void main() {
 
     await tester.tap(find.text('Buscar'));
     await tester.pumpAndSettle();
-    expect(find.text('Llega en una próxima versión.'), findsOneWidget);
+    expect(find.text('¿Cuándo hablé de...?'), findsOneWidget);
 
     await tester.pump(DiaryScreen.pollInterval * 2);
     expect(diaryCalls(), 1);

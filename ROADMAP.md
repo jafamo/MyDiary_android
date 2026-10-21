@@ -51,7 +51,9 @@ Reproductor con salto (`just_audio` + Bearer + `Range`).
 >
 > Resúmenes hechos en el change `summaries` (rama `feature/summaries`): «Más» pasa a ser un menú; lista de resúmenes plegados (fecha, nº de audios y tres líneas) que se despliegan con la leyenda, los temas y las métricas de la IA, chip de audios que abre el día del Historial, scroll infinito y filtro por rango de fechas.
 >
-> Pendiente: Búsqueda, Recordatorios, Estadísticas y Temas.
+> Búsqueda hecha en el change `search` (rama `feature/search`): se busca al enviar (no mientras se escribe), recordatorios arriba y notas y resúmenes del más parecido al menos, con ▶, «Ver más» y «Ver día»; sin búsquedas recientes guardadas.
+>
+> Pendiente: Recordatorios, Estadísticas y Temas.
 
 Historial (calendario propio), Resúmenes, Búsqueda, Recordatorios (+ campana), Estadísticas (gráficos en la app), Temas.
 

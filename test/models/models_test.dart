@@ -6,6 +6,7 @@ import 'package:mydiary/models/diary.dart';
 import 'package:mydiary/models/history.dart';
 import 'package:mydiary/models/paginated.dart';
 import 'package:mydiary/models/reminder.dart';
+import 'package:mydiary/models/search.dart';
 import 'package:mydiary/models/summary.dart';
 import 'package:mydiary/models/summary_generation.dart';
 
@@ -282,6 +283,52 @@ void main() {
       expect(day.summary, isNull);
       expect(day.previousDate, isNull);
       expect(day.nextDate, DateTime(2026, 10, 3));
+    });
+  });
+
+  group('Búsqueda', () {
+    test('notas, resúmenes y recordatorios', () {
+      final search = SearchResults.fromJson(fixture('search'));
+
+      expect(search.query, 'dentista');
+      expect(search.isEmpty, isFalse);
+      final [note as NoteResult, summary as SummaryResult] = search.results;
+      expect(note.date, DateTime(2026, 10, 8));
+      expect(note.audio.id, 42);
+      expect(note.audio.transcription!.content, contains('dentista'));
+      expect(summary.date, DateTime(2026, 10, 5));
+      expect(summary.summary.id, 7);
+      expect(search.reminders.single.text, 'Dentista');
+    });
+
+    test('tipo desconocido se descarta', () {
+      final json = fixture('search');
+      (json['results']! as List<Object?>).add({
+        'type': 'reminder_note',
+        'distance': 0.5,
+        'date': '2026-10-01',
+        'audio': null,
+        'summary': null,
+      });
+
+      expect(SearchResults.fromJson(json).results, hasLength(2));
+    });
+
+    test('nota sin audio se rechaza', () {
+      final json = fixture('search');
+      asJson((json['results']! as List<Object?>).first)['audio'] = null;
+
+      expect(() => SearchResults.fromJson(json), throwsFormatException);
+    });
+
+    test('sin resultados', () {
+      final search = SearchResults.fromJson({
+        'query': 'nada',
+        'results': [],
+        'reminders': [],
+      });
+
+      expect(search.isEmpty, isTrue);
     });
   });
 }

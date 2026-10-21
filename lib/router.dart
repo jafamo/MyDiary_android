@@ -11,7 +11,7 @@ import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/more_screen.dart';
 import 'screens/splash_screen.dart';
-import 'screens/upcoming_screen.dart';
+import 'search/search_screen.dart';
 import 'summaries/summaries_screen.dart';
 
 abstract final class Routes {
@@ -89,8 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.search,
-                builder: (context, state) =>
-                    const UpcomingScreen(title: 'Buscar'),
+                builder: (context, state) => const SearchScreen(),
               ),
             ],
           ),

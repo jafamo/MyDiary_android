@@ -34,7 +34,7 @@ La navegación SHALL tener una ruta `/splash` (comprobando la sesión), una ruta
 - **THEN** se muestra la pantalla de login
 
 ### Requirement: Navegación principal
-Con sesión, la app SHALL mostrar una barra de navegación inferior con cuatro secciones: Diario (`/`), Historial (`/historial`), Buscar (`/buscar`) y Más (`/mas`). Al cambiar de sección, cada una SHALL conservar su estado. Las secciones aún sin contenido SHALL indicar que llegan en una próxima versión. «Más» SHALL ser un menú con Resúmenes, Recordatorios, Estadísticas y Temas; las que aún no tienen pantalla SHALL aparecer desactivadas como «Próximamente».
+Con sesión, la app SHALL mostrar una barra de navegación inferior con cuatro secciones: Diario (`/`), Historial (`/historial`), Buscar (`/buscar`) y Más (`/mas`). Al cambiar de sección, cada una SHALL conservar su estado. «Más» SHALL ser un menú con Resúmenes, Recordatorios, Estadísticas y Temas; las que aún no tienen pantalla SHALL aparecer desactivadas como «Próximamente».
 
 #### Scenario: Inicio en el Diario
 - **WHEN** la app arranca con sesión
@@ -42,7 +42,7 @@ Con sesión, la app SHALL mostrar una barra de navegación inferior con cuatro s
 
 #### Scenario: Cambiar de sección
 - **WHEN** el usuario pulsa «Buscar» en la barra inferior
-- **THEN** se muestra la sección Buscar con «Llega en una próxima versión.»
+- **THEN** se muestra la sección Buscar con su campo de búsqueda
 
 #### Scenario: Menú Más
 - **WHEN** el usuario pulsa «Más» en la barra inferior

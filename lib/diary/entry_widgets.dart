@@ -248,9 +248,15 @@ class StatusFilter extends StatelessWidget {
 }
 
 class EntryCard extends StatelessWidget {
-  const EntryCard({super.key, required this.audio});
+  const EntryCard({super.key, required this.audio, this.date, this.onOpenDay});
 
   final Audio audio;
+
+  /// Día de la nota, delante de la hora (en la búsqueda; en un día ya se sabe).
+  final DateTime? date;
+
+  /// Si se da, «Ver día» bajo el texto.
+  final VoidCallback? onOpenDay;
 
   @override
   Widget build(BuildContext context) {
@@ -259,6 +265,8 @@ class EntryCard extends StatelessWidget {
       color: theme.colorScheme.onSurfaceVariant,
     );
     final transcription = audio.transcription;
+    final date = this.date;
+    final openDay = onOpenDay == null ? null : OpenDayButton(onOpenDay!);
 
     return Card(
       child: Padding(
@@ -270,12 +278,15 @@ class EntryCard extends StatelessWidget {
               children: [
                 PlayButton(audio: audio),
                 const SizedBox(width: 4),
-                Text(
-                  '${formatTime(audio.receivedAt)} · '
-                  '${formatDuration(audio.durationSeconds)}',
-                  style: muted,
+                Expanded(
+                  child: Text(
+                    '${date == null ? '' : '${formatShortDay(date)} · '}'
+                    '${formatTime(audio.receivedAt)} · '
+                    '${formatDuration(audio.durationSeconds)}',
+                    style: muted,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const Spacer(),
                 _StatusLabel(status: audio.status),
               ],
             ),
@@ -283,7 +294,7 @@ class EntryCard extends StatelessWidget {
             const SizedBox(height: 8),
             switch (audio.status) {
               AudioStatus.transcribed when transcription != null =>
-                _ExpandableText(transcription.content),
+                ExpandableText(transcription.content, action: openDay),
               AudioStatus.pending => Text(
                 'Transcripción en curso…',
                 style: muted,
@@ -294,9 +305,28 @@ class EntryCard extends StatelessWidget {
               ),
               _ => const SizedBox.shrink(),
             },
+            if (openDay != null && audio.status != AudioStatus.transcribed)
+              Align(alignment: Alignment.centerRight, child: openDay),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// «Ver día ›», que abre el día en el Historial.
+class OpenDayButton extends StatelessWidget {
+  const OpenDayButton(this.onPressed, {super.key});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: onPressed,
+      iconAlignment: IconAlignment.end,
+      icon: const Icon(Icons.chevron_right),
+      label: const Text('Ver día'),
     );
   }
 }
@@ -339,34 +369,39 @@ class _StatusLabel extends StatelessWidget {
   }
 }
 
-/// Texto plegado a [maxLines] con «Ver más» si no cabe.
-class _ExpandableText extends StatefulWidget {
-  const _ExpandableText(this.text);
+/// Texto plegado a [maxLines] con «Ver más» si no cabe o si hay [details], que solo se ven
+/// desplegado. [action] va a la derecha de «Ver más».
+class ExpandableText extends StatefulWidget {
+  const ExpandableText(this.text, {super.key, this.details, this.action});
 
   static const maxLines = 4;
 
   final String text;
+  final Widget? details;
+  final Widget? action;
 
   @override
-  State<_ExpandableText> createState() => _ExpandableTextState();
+  State<ExpandableText> createState() => _ExpandableTextState();
 }
 
-class _ExpandableTextState extends State<_ExpandableText> {
+class _ExpandableTextState extends State<ExpandableText> {
   bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
     final style = DefaultTextStyle.of(context).style;
+    final details = widget.details;
+    final action = widget.action;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final painter = TextPainter(
           text: TextSpan(text: widget.text, style: style),
-          maxLines: _ExpandableText.maxLines,
+          maxLines: ExpandableText.maxLines,
           textDirection: Directionality.of(context),
           textScaler: MediaQuery.textScalerOf(context),
         )..layout(maxWidth: constraints.maxWidth);
-        final overflows = painter.didExceedMaxLines;
+        final canExpand = painter.didExceedMaxLines || details != null;
         painter.dispose();
 
         return Column(
@@ -374,16 +409,21 @@ class _ExpandableTextState extends State<_ExpandableText> {
           children: [
             Text(
               widget.text,
-              maxLines: _expanded ? null : _ExpandableText.maxLines,
+              maxLines: _expanded ? null : ExpandableText.maxLines,
               overflow: _expanded ? null : TextOverflow.ellipsis,
             ),
-            if (overflows)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => setState(() => _expanded = !_expanded),
-                  child: Text(_expanded ? 'Ver menos' : 'Ver más'),
-                ),
+            if (_expanded && details != null) details,
+            if (canExpand || action != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (canExpand)
+                    TextButton(
+                      onPressed: () => setState(() => _expanded = !_expanded),
+                      child: Text(_expanded ? 'Ver menos' : 'Ver más'),
+                    ),
+                  ?action,
+                ],
               ),
           ],
         );
