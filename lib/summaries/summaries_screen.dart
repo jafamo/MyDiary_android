@@ -7,6 +7,7 @@ import '../diary/entry_widgets.dart';
 import '../format.dart';
 import '../models/summary.dart';
 import '../router.dart';
+import '../theme/ui_theme.dart';
 import 'summaries_provider.dart';
 
 /// Resúmenes de todos los días, del más reciente al más antiguo, con filtro por fechas.
@@ -265,9 +266,9 @@ class _Metrics extends StatelessWidget {
       '${summary.model ?? '—'} · ${or(total, formatNumber)} tokens '
       '(${or(prompt, formatNumber)} + ${or(completion, formatNumber)}) · '
       '${or(summary.generationMs, formatSeconds)}',
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
+      style: theme.textTheme.bodySmall
+          ?.copyWith(color: theme.colorScheme.onSurfaceVariant)
+          .merge(DiaryStyle.of(context).figures),
     );
   }
 }

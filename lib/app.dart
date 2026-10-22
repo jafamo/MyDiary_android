@@ -3,9 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'router.dart';
-
-/// Verde azulado de la web de MyDiary (también el fondo del icono).
-const brandColor = Color(0xFF14968A);
+import 'theme/ui_theme.dart';
 
 class MyDiaryApp extends ConsumerWidget {
   const MyDiaryApp({super.key});
@@ -14,7 +12,8 @@ class MyDiaryApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       title: 'MyDiary',
-      theme: ThemeData(colorSchemeSeed: brandColor),
+      // Hasta que la API exponga la preferencia del usuario, el tema por defecto de la web.
+      theme: UiTheme.moderno.themeData,
       locale: const Locale('es'),
       supportedLocales: const [Locale('es')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
@@ -33,6 +32,7 @@ class ConfigErrorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MyDiary',
+      theme: UiTheme.moderno.themeData,
       home: Scaffold(
         body: SafeArea(
           child: Padding(

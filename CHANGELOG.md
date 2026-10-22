@@ -16,6 +16,7 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - `feature/summaries` — fase 5 del roadmap: Resúmenes.
 - `feature/android-release` — preparación para publicar en Google Play.
 - `feature/search` — fase 5 del roadmap: Búsqueda.
+- `feature/ui-themes` — temas visuales sincronizados con la web.
 
 ### Añadido
 
@@ -44,11 +45,14 @@ Todos los cambios relevantes de la app se documentan aquí. Formato basado en [K
 - Pantalla de un día del historial con su resumen, filtro por estado y notas con ▶, y flechas para saltar al día con notas anterior o siguiente sin pasar por los vacíos (requiere un backend posterior a 0.19.0; con uno anterior salen desactivadas).
 - Resúmenes, desde «Más» (que pasa a ser un menú): lista del más reciente al más antiguo con la fecha, un chip con el nº de audios (abre el día en el Historial) y las tres primeras líneas; al tocar se despliega con la leyenda de emojis, los temas y las métricas de la IA. Scroll infinito de 20 en 20 y filtro por rango de fechas con chip para quitarlo.
 - Búsqueda en la pestaña Buscar (`GET /api/v1/busqueda`): se busca al pulsar la lupa del teclado; primero los recordatorios que coinciden y después las notas (con ▶) y los resúmenes (plegados, con la leyenda y los temas al desplegar), del más parecido al menos, con «Ver día» para abrir el día en el Historial. No se guardan búsquedas en el móvil.
-- Icono de ondas de voz (adaptativo, con versión monocroma) y tema con el verde azulado de la web (`#14968A`).
+- Icono de ondas de voz (adaptativo, con versión monocroma) sobre el cian del tema Moderno de la web (`#0E7490`).
+- Temas visuales de la web, Moderno y Cuaderno, con sus colores, fuentes y radios (`lib/theme/ui_theme.dart`); la app usa Moderno hasta que la API exponga la preferencia. Fuentes incluidas en la app (Plus Jakarta Sans, JetBrains Mono, Newsreader y Roboto) con sus licencias en la página de licencias.
 - Builds de publicación firmados: `make keystore` crea la clave de subida (no versionada) y `make appbundle` / `make apk-release` exigen la clave y una `API_BASE_URL` `https`. Política de privacidad en `PRIVACY.md` y guía de publicación en la prueba interna de Google Play en `doc/RELEASE.md`, con el icono y el gráfico destacado de la ficha en `doc/icon/` (aún sin publicar).
 - App en español, también en los textos de Material y las fechas (`flutter_localizations`, `intl`).
 - CI en GitHub Actions (formato, análisis y tests), hook `pre-commit` de formato y guardas de Claude Code (sin commits en `develop`/`main`, `dart format` al editar).
 
 ### Cambiado
 
+- Estado de las notas en una pastilla con los colores de la web (pendiente, transcrita, error) y horas, duraciones y métricas con la fuente de cifras del tema.
+- «Temas» pasa a llamarse «Categorías» en «Más», como en la web.
 - `make apk` para los demonios de Gradle y Kotlin al terminar: con ellos vivos el emulador se colgaba al arrancar.

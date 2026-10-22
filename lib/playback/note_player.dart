@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../format.dart';
 import '../models/audio.dart';
 import 'playback_controller.dart';
+import '../theme/ui_theme.dart';
 
 /// Botón de escuchar de una entrada: ▶, progreso de la descarga (toque = cancelar) o ⏸.
 class PlayButton extends ConsumerWidget {
@@ -85,7 +86,7 @@ class _NotePlayerBarState extends ConsumerState<NotePlayerBar> {
           '${formatDuration(value ~/ 1000)} / '
           '${formatDuration(playback.duration.inSeconds)}',
           style: Theme.of(context).textTheme.bodySmall
-              ?.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
+              ?.merge(DiaryStyle.of(context).figures),
         ),
         TextButton(
           onPressed: controller.cycleSpeed,

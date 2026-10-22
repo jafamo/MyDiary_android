@@ -53,13 +53,15 @@ Reproductor con salto (`just_audio` + Bearer + `Range`).
 >
 > Búsqueda hecha en el change `search` (rama `feature/search`): se busca al enviar (no mientras se escribe), recordatorios arriba y notas y resúmenes del más parecido al menos, con ▶, «Ver más» y «Ver día»; sin búsquedas recientes guardadas.
 >
-> Pendiente: Recordatorios, Estadísticas y Temas.
+> Temas visuales hechos en el change `ui-themes` (rama `feature/ui-themes`): Moderno y Cuaderno con los colores, fuentes y radios de la web; la app usa Moderno. Pendiente el selector «Tema» en el menú ⋮, que necesita que la API exponga y permita cambiar `ui_theme` (se propone en el backend).
+>
+> Pendiente: Recordatorios, Estadísticas y Categorías.
 
-Historial (calendario propio), Resúmenes, Búsqueda, Recordatorios (+ campana), Estadísticas (gráficos en la app), Temas.
+Historial (calendario propio), Resúmenes, Búsqueda, Recordatorios (+ campana), Estadísticas (gráficos en la app), Categorías.
 
 ### Fase 6 — Escritura
 
-Editar/eliminar transcripción, reintentar audio en `ERROR`, generar resumen con sondeo de estado, CRUD de recordatorios, renombrar y fusionar temas (con confirmación en la app).
+Editar/eliminar transcripción, reintentar audio en `ERROR`, generar resumen con sondeo de estado, CRUD de recordatorios, renombrar y fusionar categorías (con confirmación en la app).
 
 ### Fase 7 — Notificaciones push
 

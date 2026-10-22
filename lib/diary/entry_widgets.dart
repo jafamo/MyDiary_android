@@ -9,6 +9,7 @@ import '../models/audio.dart';
 import '../models/summary.dart';
 import '../models/summary_generation.dart';
 import '../playback/note_player.dart';
+import '../theme/ui_theme.dart';
 
 /// `message` de la API o un texto genérico.
 String errorMessage(Object? error) =>
@@ -283,7 +284,7 @@ class EntryCard extends StatelessWidget {
                     '${date == null ? '' : '${formatShortDay(date)} · '}'
                     '${formatTime(audio.receivedAt)} · '
                     '${formatDuration(audio.durationSeconds)}',
-                    style: muted,
+                    style: muted?.merge(DiaryStyle.of(context).figures),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -294,7 +295,11 @@ class EntryCard extends StatelessWidget {
             const SizedBox(height: 8),
             switch (audio.status) {
               AudioStatus.transcribed when transcription != null =>
-                ExpandableText(transcription.content, action: openDay),
+                ExpandableText(
+                  transcription.content,
+                  style: DiaryStyle.of(context).noteText,
+                  action: openDay,
+                ),
               AudioStatus.pending => Text(
                 'Transcripción en curso…',
                 style: muted,
@@ -331,6 +336,7 @@ class OpenDayButton extends StatelessWidget {
   }
 }
 
+/// Pastilla con el estado de la nota y los colores de estado del tema.
 class _StatusLabel extends StatelessWidget {
   const _StatusLabel({required this.status});
 
@@ -338,33 +344,56 @@ class _StatusLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final (icon, label, color) = switch (status) {
+    final style = DiaryStyle.of(context);
+    final muted = Theme.of(context).colorScheme;
+    final (icon, label, color, background) = switch (status) {
       AudioStatus.transcribed => (
         Icons.check_circle_outline,
         'Transcrito',
-        colors.primary,
+        style.statusTranscribed,
+        style.statusTranscribedBg,
       ),
       AudioStatus.pending => (
         Icons.hourglass_top,
         'Transcribiendo…',
-        colors.onSurfaceVariant,
+        style.statusPending,
+        style.statusPendingBg,
       ),
-      AudioStatus.error => (Icons.error_outline, 'Error', colors.error),
+      AudioStatus.error => (
+        Icons.error_outline,
+        'Error',
+        style.statusError,
+        style.statusErrorBg,
+      ),
       AudioStatus.unknown => (
         Icons.help_outline,
         'Desconocido',
-        colors.onSurfaceVariant,
+        muted.onSurfaceVariant,
+        muted.surfaceContainerHighest,
       ),
     };
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 16, color: color),
-        const SizedBox(width: 4),
-        Text(label, style: TextStyle(color: color)),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -372,11 +401,20 @@ class _StatusLabel extends StatelessWidget {
 /// Texto plegado a [maxLines] con «Ver más» si no cabe o si hay [details], que solo se ven
 /// desplegado. [action] va a la derecha de «Ver más».
 class ExpandableText extends StatefulWidget {
-  const ExpandableText(this.text, {super.key, this.details, this.action});
+  const ExpandableText(
+    this.text, {
+    super.key,
+    this.style,
+    this.details,
+    this.action,
+  });
 
   static const maxLines = 4;
 
   final String text;
+
+  /// Se combina con el estilo del texto alrededor.
+  final TextStyle? style;
   final Widget? details;
   final Widget? action;
 
@@ -389,7 +427,7 @@ class _ExpandableTextState extends State<ExpandableText> {
 
   @override
   Widget build(BuildContext context) {
-    final style = DefaultTextStyle.of(context).style;
+    final style = DefaultTextStyle.of(context).style.merge(widget.style);
     final details = widget.details;
     final action = widget.action;
 
@@ -409,6 +447,7 @@ class _ExpandableTextState extends State<ExpandableText> {
           children: [
             Text(
               widget.text,
+              style: style,
               maxLines: _expanded ? null : ExpandableText.maxLines,
               overflow: _expanded ? null : TextOverflow.ellipsis,
             ),

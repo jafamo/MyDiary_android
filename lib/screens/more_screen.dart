@@ -11,7 +11,7 @@ class MoreScreen extends StatelessWidget {
     (Icons.auto_stories_outlined, 'Resúmenes', Routes.summaries),
     (Icons.notifications_outlined, 'Recordatorios', null),
     (Icons.bar_chart, 'Estadísticas', null),
-    (Icons.sell_outlined, 'Temas', null),
+    (Icons.sell_outlined, 'Categorías', null),
   ];
 
   @override
